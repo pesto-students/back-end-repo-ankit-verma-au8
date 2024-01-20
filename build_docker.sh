@@ -1,1 +1,1 @@
-docker build -t hapi-core .
+docker build -t trackpe-core .

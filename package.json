@@ -48,6 +48,7 @@
     "@types/bcrypt": "^3.0.0",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/mocha": "^8.0.3",
+    "amqplib": "^0.10.3",
     "aws-sdk": "2.871.0",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.0",

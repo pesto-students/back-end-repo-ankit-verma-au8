@@ -10,23 +10,11 @@ export type UserEvents =
   | "user-login-successful"
   | "user-login-failed";
 
-export type CalculatorEvents = "footprint-calculated";
+export type MqEvents = "mq-connection-failed" | "mq-connection-created";
 
-export type StripeEvents = "stripe-account-created";
+export type ExpenseEvents = "expense-saved";
 
-export type LandscapeEvents = "landscape-created" | "landscape-updated";
-
-export type MailchimpEvents =
-  | "subscribed-to-newsletter"
-  | "newsletter-subscription-failed"
-  | "mailchimp-language-updated";
-
-export type EventName =
-  | GeneralEvents
-  | UserEvents
-  | CalculatorEvents
-  | LandscapeEvents
-  | MailchimpEvents;
+export type EventName = GeneralEvents | UserEvents | MqEvents | ExpenseEvents;
 
 export function logEvent(
   eventName: EventName,
@@ -58,32 +46,18 @@ export function userLoggedInFailed(reason) {
   logEvent("user-login-failed", { reason });
 }
 
-// Landscape function
+// Mq Events
 
-export function landscapeCreatedEvent(id, landscapeName, metadata) {
-  logEvent("landscape-created", { id, landscapeName, metadata });
+export function mqConnectionFailed(reason) {
+  logEvent("mq-connection-failed", { reason });
 }
 
-// Calculator
-
-export function footPrintCalculated(userAnswer, result) {
-  logEvent("footprint-calculated", { userAnswer, result });
+export function mqConnectionCreated(data = null) {
+  logEvent("mq-connection-created", data);
 }
 
-// Mail chimp
+//Expense events
 
-export function subscribedToNewsLetter(details) {
-  logEvent("subscribed-to-newsletter", details);
-}
-
-export function mailchimpSubscriptionFailed(subscriberInfo, error) {
-  logEvent(
-    "newsletter-subscription-failed",
-    { subscriberInfo, error },
-    "error"
-  );
-}
-
-export function mailchimpLanguageUpdated(email, language) {
-  logEvent("mailchimp-language-updated", { email, language });
+export function expenseSaved(data) {
+  logEvent("expense-saved", data);
 }

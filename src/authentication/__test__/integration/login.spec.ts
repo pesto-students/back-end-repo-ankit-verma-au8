@@ -10,9 +10,9 @@ import jwt from "jsonwebtoken";
 import config from "../../../config";
 import { USER_SIGNUP } from "../../../user/constant";
 
-describe("Login API", async () => {
+describe("Login API", () => {
   let testEnv;
-  const newUser = await F.fakeUser(null);
+  const newUser = F.fakeUser(null);
   let userId;
   beforeEach(async () => {
     testEnv = await getTestEnv();

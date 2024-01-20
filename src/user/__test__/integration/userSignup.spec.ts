@@ -5,7 +5,7 @@ import db from "../../../db";
 import * as F from "../../../../test/env/factories";
 import { USER_SIGNUP, USER_TABLE } from "../../../../src/user/constant";
 
-describe("User API", async () => {
+describe("User API", () => {
   let testEnv;
   beforeEach(async () => {
     testEnv = await getTestEnv();

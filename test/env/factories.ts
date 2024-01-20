@@ -6,7 +6,7 @@ export const getRandomValueFromArray = <T>(inputArray: Array<T>): T => {
   return inputArray[Math.floor(Math.random() * inputArray.length)];
 };
 
-export async function fakeUser(options) {
+export function fakeUser(options) {
   const user = {
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),

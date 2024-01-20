@@ -10,9 +10,11 @@ import DiagnosticRouter from "./diagnostic/router";
 
 import userHandler from "./user/handler";
 import authHandler from "./authentication/handler";
+import expenseHandler from "./expense/handler";
 
 import UserRouter from "./user/router";
 import AuthRouter from "./authentication/router";
+import ExpenseRouter from "./expense/router";
 
 export const init = async (config) => {
   // Hapi JS server initialization
@@ -61,6 +63,7 @@ export const init = async (config) => {
   ]);
   const userHandlerObj = userHandler(config);
   const authHandlerObj = authHandler(config);
+  const expenseHandlerObj = expenseHandler(config);
 
   // Authentications
   server.auth.strategy("jwt", "jwt", {
@@ -72,6 +75,7 @@ export const init = async (config) => {
 
   UserRouter(server, userHandlerObj);
   AuthRouter(server, authHandlerObj);
+  ExpenseRouter(server, expenseHandlerObj);
 
   DiagnosticRouter(server);
   await server.initialize();
