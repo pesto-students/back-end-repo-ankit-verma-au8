@@ -9,6 +9,10 @@ jobs:
     runs-on: [self-hosted, trackpe-prod]
 
     steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "12"
       - uses: actions/checkout@v3
       - name: "Create env file"
         run: |
