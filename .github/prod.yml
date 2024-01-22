@@ -1,0 +1,24 @@
+name: Dev server CI/CD
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  build:
+    runs-on: [self-hosted, trackpe-prod]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Create env file"
+        run: |
+          touch .env
+          echo DB_CONNECTION_URI=${{ secrets.DB_CONNECTION_URI }} >> .env
+          echo TEST_DB_CONNECTION_URI=${{ secrets.TEST_DB_CONNECTION_URI }} >> .env
+
+      - run: npm install
+      - run: npm run db:migrate
+      - run: npm test
+      - run: pm2 stop dev-server
+      - run: pm2 start dev-server
+      - run: pm2 save
