@@ -19,6 +19,7 @@ jobs:
           touch .env
           echo DB_CONNECTION_URI=${{ secrets.DB_CONNECTION_URI }} >> .env
           echo TEST_DB_CONNECTION_URI=${{ secrets.TEST_DB_CONNECTION_URI }} >> .env
+          cat .env
 
       - run: npm install
       - run: npm run db:migrate
