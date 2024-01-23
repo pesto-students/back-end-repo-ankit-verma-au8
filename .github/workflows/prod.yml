@@ -24,6 +24,6 @@ jobs:
       - run: npm install
       - run: npm run db:migrate
       - run: npm test
-      - run: pm2 stop dev-server
-      - run: pm2 start dev-server
+      - run: pm2 stop prod-server
+      - run: pm2 start prod-server
       - run: pm2 save
