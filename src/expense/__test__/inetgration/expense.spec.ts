@@ -36,9 +36,13 @@ describe("Save expense API", () => {
   });
 
   it("should save user expense", async () => {
+    const category = await db("expenseCategories")
+      .select("*")
+      .where({ name: "Entertainment" })
+      .first();
     const expenseDetails = {
       amount: 5000,
-      category: "Entertainment",
+      categoryId: category.id,
       textMessage: "Spent 5000 on movies",
     };
 
@@ -54,6 +58,6 @@ describe("Save expense API", () => {
     expect(expenses[0].userId).to.eql(userId);
     expect(expenses[0].textMessage).to.eql(expenseDetails.textMessage);
     expect(Number(expenses[0].amount)).to.eql(expenseDetails.amount);
-    expect(expenses[0].category).to.eql(expenseDetails.category);
+    expect(expenses[0].categoryId).to.eql(expenseDetails.categoryId);
   });
 });

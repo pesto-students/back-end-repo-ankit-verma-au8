@@ -15,9 +15,7 @@ export enum allCategories {
 }
 export const saveExpenseSchema = Joi.object({
   amount: Joi.number().required(),
-  category: Joi.string()
-    .valid(...Object.values(allCategories))
-    .required(),
+  categoryId: Joi.number().required(),
   textMessage: Joi.string().allow("").allow(null),
 });
 
