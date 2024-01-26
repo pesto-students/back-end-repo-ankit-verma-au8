@@ -15,3 +15,13 @@ export const SAVE_EXPENSE = {
   description: "Save expense api",
   notes: "Save expense api",
 };
+
+export const SAVE_WA_EXPENSE = {
+  endPoint: "/user/wa/expense",
+  method: "POST",
+  auth: false,
+  tags: ["save-wa-expense", "api", "expense"],
+  reCaptcha: false,
+  description: "Save WA expense api",
+  notes: "Save WA expense api",
+};

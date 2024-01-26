@@ -37,6 +37,9 @@ const Config = {
 
   STATIC_FILES_BASE_PATH:
     process.env.STATIC_FILES_BASE_PATH || `${BASE_URL}/media`,
+
+  WAPI_INSTANCE_ID: process.env.WAPI_INSTANCE_ID || "",
+  WAPI_API_KEY: process.env.WAPI_API_KEY,
 };
 
 const Prod = _.merge(Config, {

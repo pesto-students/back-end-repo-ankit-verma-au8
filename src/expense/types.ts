@@ -22,6 +22,22 @@ export const saveExpenseSchema = Joi.object({
 export type Expense = {
   userId: Number;
   amount: Number;
-  textMessage: string;
-  category: string;
+  textMessage: String;
+  categoryId: number;
 };
+
+export type InWaMessageData = {
+  event: String;
+  instanceId: String;
+  data: {
+    message: {
+      _data: {
+        from: String;
+        to: String;
+        body: String;
+      };
+    };
+  };
+};
+
+export type ExtractExpenseDataFromWaError = "userDoesNotExist";

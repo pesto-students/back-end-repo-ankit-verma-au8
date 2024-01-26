@@ -12,9 +12,20 @@ export type UserEvents =
 
 export type MqEvents = "mq-connection-failed" | "mq-connection-created";
 
-export type ExpenseEvents = "expense-saved";
+export type ExpenseEvents = "expense-saved" | "save-expense-failed";
 
-export type EventName = GeneralEvents | UserEvents | MqEvents | ExpenseEvents;
+export type whatsAppEvents =
+  | "whatsApp-message-sent"
+  | "whatsApp-media-sent"
+  | "sending-media-failed"
+  | "sending-message-failed";
+
+export type EventName =
+  | GeneralEvents
+  | UserEvents
+  | MqEvents
+  | ExpenseEvents
+  | whatsAppEvents;
 
 export function logEvent(
   eventName: EventName,
@@ -60,4 +71,26 @@ export function mqConnectionCreated(data = null) {
 
 export function expenseSaved(data) {
   logEvent("expense-saved", data);
+}
+
+export function expenseSaveFailed(data) {
+  logEvent("save-expense-failed", data);
+}
+
+// Whatsapp events
+
+export function messageSent(data) {
+  logEvent("whatsApp-message-sent", data);
+}
+
+export function mediaSent(data) {
+  logEvent("whatsApp-media-sent", data);
+}
+
+export function messageSendingFailed(data) {
+  logEvent("sending-message-failed", data);
+}
+
+export function mediaSendingFailed(data) {
+  logEvent("sending-media-failed", data);
 }

@@ -8,10 +8,14 @@ import sinon from "sinon";
 var testEnv: undefined | any;
 
 async function resetDB() {
-  const query = `
-    truncate table users, subjects, topics, questions, session CASCADE;
-    `;
-  return knex.schema.raw(query);
+  try {
+    const query = `
+      truncate table users, session, expenses CASCADE;
+      `;
+    return knex.schema.raw(query);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 async function initTestServer() {
