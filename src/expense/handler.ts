@@ -4,7 +4,7 @@ import * as repo from "./repo";
 import { Expense } from "./types";
 import { extractExpenseDataFromWa } from "./domain";
 import { WhatsAppHandlerObj } from "../../src/whatsapp/types";
-import { renderTemplate } from "src/whatsapp/domain";
+import { renderTemplate } from "../../src/whatsapp/domain";
 
 export default function expenseHandler(
   config,

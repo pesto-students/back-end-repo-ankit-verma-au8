@@ -77,7 +77,7 @@ describe("Save WA expense API", () => {
     userId = response1.result.userId;
   });
 
-  it("should save user expense", async () => {
+  it("should save user expense from WA", async () => {
     const msgData = {
       event: "message",
       instanceId: "4911",
@@ -175,14 +175,14 @@ describe("Save WA expense API", () => {
       url: SAVE_WA_EXPENSE.endPoint,
       payload: msgData,
     });
-    expect(response.statusCode).to.eql(201);
+    expect(response.statusCode).to.eql(200);
     const expenses = await db("expenses").select("*");
     expect(expenses.length).to.eql(1);
     expect(expenses[0].userId).to.eql(userId);
     expect(expenses[0].textMessage).to.eql(msgData.data.message.body);
   });
 
-  it("should save user expense", async () => {
+  it("should handle if user account does not exist ", async () => {
     const msgData = {
       event: "message",
       instanceId: "4911",
@@ -280,7 +280,7 @@ describe("Save WA expense API", () => {
       url: SAVE_WA_EXPENSE.endPoint,
       payload: msgData,
     });
-    expect(response.statusCode).to.eql(400);
-    expect(response.result.message).to.eql("userDoesNotExist");
+    expect(response.statusCode).to.eql(200);
+    expect(response.result).to.eql("userDoesNotExist");
   });
 });

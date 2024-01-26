@@ -43,18 +43,14 @@ const userRouter = (server: Hapi.Server, expenseHandler) => {
     path: SAVE_WA_EXPENSE.endPoint,
     options: {
       handler: async (request, h) => {
-        try {
-          const expenseDetails = request.payload;
-          const response = await expenseHandler.saveWaExpense({
-            ...expenseDetails,
-          });
-          if (isLeft(response)) {
-            return h.response({ message: response.left }).code(400);
-          }
-          return h.response(response.right).code(201);
-        } catch (e) {
-          console.log(e);
+        const expenseDetails = request.payload;
+        const response = await expenseHandler.saveWaExpense({
+          ...expenseDetails,
+        });
+        if (isLeft(response)) {
+          return h.response({ message: response.left }).code(400);
         }
+        return h.response(response.right).code(200);
       },
       auth: SAVE_WA_EXPENSE.auth,
       tags: SAVE_WA_EXPENSE.tags,
