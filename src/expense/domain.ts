@@ -14,7 +14,7 @@ export const extractExpenseDataFromWa = async (
   const waNumber = msgData.data.message._data.from.substring(0, 12);
   const user = await getUserDetails({ waNumber });
   if (_.isNil(user)) {
-    expenseSaveFailed({ reason: "User does not exist.", waNumber });
+    expenseSaveFailed({ reason: "userDoesNotExist", waNumber });
     return left("userDoesNotExist");
   }
   const expenseData: Expense = {
