@@ -1,9 +1,13 @@
 import * as Hapi from "@hapi/hapi";
 import { isLeft, fold } from "fp-ts/lib/Either";
 import * as _ from "ramda";
-import { SAVE_EXPENSE, SAVE_WA_EXPENSE } from "./constant";
+import {
+  SAVE_EXPENSE,
+  SAVE_WA_EXPENSE,
+  GET_EXPENSE_OVERVIEW,
+} from "./constant";
 
-const userRouter = (server: Hapi.Server, expenseHandler) => {
+const expenseRouter = (server: Hapi.Server, expenseHandler) => {
   server.route({
     method: SAVE_EXPENSE.method,
     path: SAVE_EXPENSE.endPoint,
@@ -61,6 +65,24 @@ const userRouter = (server: Hapi.Server, expenseHandler) => {
       notes: SAVE_WA_EXPENSE.notes,
     },
   });
+
+  server.route({
+    method: GET_EXPENSE_OVERVIEW.method,
+    path: GET_EXPENSE_OVERVIEW.endPoint,
+    options: {
+      handler: async (request, h) => {
+        const response = await expenseHandler.getExpenseOverview();
+        return h.response(response).code(200);
+      },
+      auth: GET_EXPENSE_OVERVIEW.auth,
+      tags: GET_EXPENSE_OVERVIEW.tags,
+      plugins: {
+        reCaptcha: GET_EXPENSE_OVERVIEW.reCaptcha,
+      },
+      description: GET_EXPENSE_OVERVIEW.description,
+      notes: GET_EXPENSE_OVERVIEW.notes,
+    },
+  });
 };
 
-export default userRouter;
+export default expenseRouter;

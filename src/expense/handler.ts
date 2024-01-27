@@ -44,5 +44,16 @@ export default function expenseHandler(
       expenseSaved(result);
       return right(result);
     },
+
+    getExpenseOverview: async () => {
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1;
+      const currentYear = currentDate.getFullYear();
+      const totalExpense = await repo.getTotalExpenseForMonth(
+        currentMonth,
+        currentYear
+      );
+      return { totalExpense: totalExpense[0] };
+    },
   };
 }

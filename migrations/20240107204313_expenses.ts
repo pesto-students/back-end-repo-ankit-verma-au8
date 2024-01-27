@@ -28,7 +28,7 @@ export async function up(knex: Knex): Promise<void> {
       "amount" NUMERIC,
       "textMessage" TEXT,
       "categoryId" INT references "expenseCategories"(id),
-      "createdAt" timestamptz
+      "createdAt" timestamptz DEFAULT now()
     );`;
   return knex.schema.raw(query);
 }

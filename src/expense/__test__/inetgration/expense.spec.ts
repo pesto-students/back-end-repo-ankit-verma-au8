@@ -5,7 +5,12 @@ import db from "../../../db";
 import * as F from "../../../../test/env/factories";
 import { AUTH_LOGIN } from "../../../authentication/constant";
 import { USER_SIGNUP } from "../../../user/constant";
-import { SAVE_EXPENSE, SAVE_WA_EXPENSE } from "../../constant";
+import {
+  GET_EXPENSE_OVERVIEW,
+  SAVE_EXPENSE,
+  SAVE_WA_EXPENSE,
+} from "../../constant";
+import { saveExpense } from "../../../../src/expense/repo";
 
 describe("Save expense API", () => {
   let testEnv;
@@ -282,5 +287,62 @@ describe("Save WA expense API", () => {
     });
     expect(response.statusCode).to.eql(200);
     expect(response.result).to.eql("userDoesNotExist");
+  });
+});
+
+describe("Get expense overview", () => {
+  let testEnv;
+  let userId;
+  let authToken;
+  const newUser = F.fakeUser(null);
+  beforeEach(async () => {
+    testEnv = await getTestEnv();
+    await testEnv.resetDB();
+    const response1 = await testEnv.server.inject({
+      method: USER_SIGNUP.method,
+      url: USER_SIGNUP.endPoint,
+      payload: newUser,
+    });
+    userId = response1.result.userId;
+
+    const loginDetails = {
+      waNumber: newUser.waNumber,
+      password: newUser.password,
+      staySignedIn: true,
+      role: "user",
+    };
+
+    const response = await testEnv.server.inject({
+      method: AUTH_LOGIN.method,
+      url: AUTH_LOGIN.endPoint,
+      payload: loginDetails,
+    });
+    authToken = response.result.authToken;
+  });
+
+  it("should return expense overview", async () => {
+    await saveExpense({ amount: 50, categoryId: 1 });
+    await saveExpense({ amount: 150, categoryId: 1 });
+    await saveExpense({ amount: 250, categoryId: 1 });
+    await saveExpense({ amount: 350, categoryId: 1 });
+    await saveExpense({ amount: 450, categoryId: 1 });
+    const currentDate = new Date();
+    const twoMonthsAgo = new Date(currentDate);
+    twoMonthsAgo.setMonth(currentDate.getMonth() - 2);
+    const timestampTwoMonthsAgo = twoMonthsAgo.getTime();
+    await saveExpense({
+      amount: 550,
+      categoryId: 1,
+      createdAt: new Date(timestampTwoMonthsAgo),
+    });
+    const response = await testEnv.server.inject({
+      method: GET_EXPENSE_OVERVIEW.method,
+      url: GET_EXPENSE_OVERVIEW.endPoint,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    expect(response.statusCode).to.eql(200);
+    expect(response.result.totalExpense.totalAmount).to.eql("1250");
   });
 });

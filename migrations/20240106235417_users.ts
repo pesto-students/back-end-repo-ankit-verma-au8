@@ -10,7 +10,7 @@ export async function up(knex: Knex): Promise<void> {
       "password" varchar,
       "email" varchar,
       "role" varchar,
-      "createdAt" timestamptz,
+      "createdAt" timestamptz DEFAULT now(),
       "updatedAt" timestamptz DEFAULT now()
     );
 
