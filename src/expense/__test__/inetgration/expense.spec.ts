@@ -345,4 +345,30 @@ describe("Get expense overview", () => {
     expect(response.statusCode).to.eql(200);
     expect(response.result.totalExpense.totalAmount).to.eql("1250");
   });
+
+  it("should return expense overview", async () => {
+    await saveExpense({ amount: 50, categoryId: 1 });
+    await saveExpense({ amount: 150, categoryId: 1 });
+    await saveExpense({ amount: 250, categoryId: 1 });
+    await saveExpense({ amount: 350, categoryId: 1 });
+    await saveExpense({ amount: 450, categoryId: 1 });
+    const currentDate = new Date();
+    const twoMonthsAgo = new Date(currentDate);
+    twoMonthsAgo.setMonth(currentDate.getMonth() - 2);
+    const timestampTwoMonthsAgo = twoMonthsAgo.getTime();
+    await saveExpense({
+      amount: 550,
+      categoryId: 1,
+      createdAt: new Date(timestampTwoMonthsAgo),
+    });
+    const response = await testEnv.server.inject({
+      method: GET_EXPENSE_OVERVIEW.method,
+      url: GET_EXPENSE_OVERVIEW.endPoint,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    expect(response.statusCode).to.eql(200);
+    expect(response.result.totalExpense.totalAmount).to.eql("1250");
+  });
 });
