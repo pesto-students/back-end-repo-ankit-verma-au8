@@ -9,7 +9,10 @@ export default function userHandler(config) {
     signUpUser: async (
       signUpDetails: User
     ): Promise<Either<SaveUserError, UserId>> => {
-      const result = await repo.saveUserDetails(signUpDetails);
+      const result = await repo.saveUserDetails({
+        ...signUpDetails,
+        role: "user",
+      });
       if (isLeft(result)) {
         userAccountCreationFailed({
           email: signUpDetails.waNumber,

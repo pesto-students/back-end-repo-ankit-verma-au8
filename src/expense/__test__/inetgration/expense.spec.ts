@@ -23,8 +23,8 @@ describe("Save expense API", () => {
     const loginDetails = {
       waNumber: newUser.waNumber,
       password: newUser.password,
-      role: newUser.role,
       staySignedIn: true,
+      role: "user",
     };
 
     const response = await testEnv.server.inject({

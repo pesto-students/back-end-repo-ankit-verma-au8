@@ -4,6 +4,10 @@ import { init } from "../../src/server";
 import knex from "../../src/db";
 import _ from "ramda";
 import sinon from "sinon";
+import { WhatsAppHandlerObj } from "../../src/whatsapp/types";
+import { right } from "fp-ts/lib/Either";
+import { nlpHandlerObj } from "../../src/nlp/types";
+import nlpHandler from "src/nlp/handler";
 
 var testEnv: undefined | any;
 
@@ -17,13 +21,30 @@ async function resetDB() {
     console.log(e);
   }
 }
+export const dummyWhatsAppHandler: WhatsAppHandlerObj = {
+  sendTextMessage: async (whatsAppNumber: string, textMessage: string) => {},
+};
+
+export const dummyNlpHandlerObj: nlpHandlerObj = {
+  extractExpenseDataFromFreeText: (textMessage: string) => {
+    return {
+      amount: 50,
+      category: "Entertainment",
+      text: textMessage,
+    };
+  },
+};
 
 async function initTestServer() {
   const updateConfig = _.mergeRight(config, {
     SENTRY_DSN: undefined,
   });
 
-  const { server, handlers } = await init(updateConfig);
+  const { server, handlers } = await init(
+    updateConfig,
+    dummyWhatsAppHandler,
+    dummyNlpHandlerObj
+  );
 
   await knex.migrate.rollback();
   await knex.migrate.latest();

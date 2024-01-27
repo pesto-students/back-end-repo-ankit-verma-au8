@@ -28,8 +28,8 @@ describe("Login API", () => {
     const loginDetails = {
       waNumber: newUser.waNumber,
       password: newUser.password,
-      role: newUser.role,
       staySignedIn: true,
+      role: "user",
     };
 
     const response = await testEnv.server.inject({
@@ -39,18 +39,17 @@ describe("Login API", () => {
     });
     const authToken = response.result.authToken;
     expect(response.statusCode).to.eql(200);
-    expect(authToken).to.be.a("string");
     var decoded: any = jwt.verify(authToken, config.JWT_SECRET);
     expect(decoded.userId).to.eql(response.result.userId);
-    expect(decoded.scope).to.eql(newUser.role);
+    expect(decoded.scope).to.eql(loginDetails.role);
     expect(response.result.userId).to.eql(userId);
   });
   it("should handle if user does not exist", async () => {
     const loginDetails = {
       waNumber: newUser.waNumber + "1",
       password: newUser.password,
-      role: newUser.role,
       staySignedIn: true,
+      role: "user",
     };
 
     const response = await testEnv.server.inject({
@@ -64,13 +63,13 @@ describe("Login API", () => {
   it("should handle if password is incorrect", async () => {
     const newUser = await F.fakeUser(null);
 
-    await saveUserDetails(newUser);
+    await saveUserDetails({ ...newUser, role: "user" });
 
     const loginDetails = {
       waNumber: newUser.waNumber,
       password: newUser.password + "a",
-      role: newUser.role,
       staySignedIn: true,
+      role: "user",
     };
 
     const response = await testEnv.server.inject({

@@ -11,14 +11,19 @@ import DiagnosticRouter from "./diagnostic/router";
 import userHandler from "./user/handler";
 import authHandler from "./authentication/handler";
 import expenseHandler from "./expense/handler";
-import whatsAppHandler from "./whatsapp/handler";
 import nlpHandler from "./nlp/handler";
 
 import UserRouter from "./user/router";
 import AuthRouter from "./authentication/router";
 import ExpenseRouter from "./expense/router";
+import { WhatsAppHandlerObj } from "./whatsapp/types";
+import { nlpHandlerObj } from "./nlp/types";
 
-export const init = async (config) => {
+export const init = async (
+  config,
+  whatsAppHandlerObj: WhatsAppHandlerObj,
+  nlpHandlerObj: nlpHandlerObj
+) => {
   // Hapi JS server initialization
   const server = Hapi.server({
     port: config.PORT,
@@ -65,8 +70,6 @@ export const init = async (config) => {
   ]);
   const userHandlerObj = userHandler(config);
   const authHandlerObj = authHandler(config);
-  const nlpHandlerObj = nlpHandler(config);
-  const whatsAppHandlerObj = whatsAppHandler(config);
   const expenseHandlerObj = expenseHandler(
     config,
     whatsAppHandlerObj,

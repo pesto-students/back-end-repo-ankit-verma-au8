@@ -17,13 +17,13 @@ describe("Logout API", async () => {
   it("should logout a user", async () => {
     const newUser = await F.fakeUser(null);
 
-    await saveUserDetails(newUser);
+    await saveUserDetails({ ...newUser, role: "user" });
 
     const loginDetails = {
       waNumber: newUser.waNumber,
       password: newUser.password,
-      role: newUser.role,
       staySignedIn: true,
+      role: "user",
     };
 
     const loginResponse = await testEnv.server.inject({

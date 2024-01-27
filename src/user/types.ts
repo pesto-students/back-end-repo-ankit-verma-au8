@@ -4,7 +4,6 @@ export const signUpSchema = Joi.object({
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
   email: Joi.string().email(),
-  role: Joi.string().required(),
   waNumber: Joi.string().min(10).required(),
   password: Joi.string().min(8).required(),
 });
@@ -15,6 +14,7 @@ export type User = {
   email?: string;
   waNumber: string;
   password: string;
+  role?: string;
 };
 
 export type SaveUserError = "WhatsApp number is already registered";

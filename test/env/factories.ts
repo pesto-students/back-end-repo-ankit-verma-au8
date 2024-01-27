@@ -13,7 +13,6 @@ export function fakeUser(options) {
     email: faker.internet.email(),
     password: "VTrack@8765",
     waNumber: faker.phone.phoneNumber("############"),
-    role: "user",
   };
   return _.mergeRight(user, options);
 }
