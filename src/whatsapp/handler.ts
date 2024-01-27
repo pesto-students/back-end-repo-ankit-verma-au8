@@ -24,7 +24,7 @@ export default function whatsAppHandler(config): WhatsAppHandlerObj {
         );
         messageSent(msgData);
       } catch (error) {
-        messageSendingFailed(whatsAppNumber);
+        messageSendingFailed({ whatsAppNumber, text: textMessage, error });
         return left("errorInSendingMessage");
       }
     },

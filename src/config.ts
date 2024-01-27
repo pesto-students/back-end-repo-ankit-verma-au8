@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import process from "process";
 import _ from "ramda";
 
 dotenv.config();
@@ -40,6 +41,7 @@ const Config = {
 
   WAPI_INSTANCE_ID: process.env.WAPI_INSTANCE_ID || "",
   WAPI_API_KEY: process.env.WAPI_API_KEY,
+  GPT_API_KEY: process.env.GPT_API_KEY,
 };
 
 const Prod = _.merge(Config, {

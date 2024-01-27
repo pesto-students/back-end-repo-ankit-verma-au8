@@ -12,6 +12,7 @@ import userHandler from "./user/handler";
 import authHandler from "./authentication/handler";
 import expenseHandler from "./expense/handler";
 import whatsAppHandler from "./whatsapp/handler";
+import nlpHandler from "./nlp/handler";
 
 import UserRouter from "./user/router";
 import AuthRouter from "./authentication/router";
@@ -64,8 +65,13 @@ export const init = async (config) => {
   ]);
   const userHandlerObj = userHandler(config);
   const authHandlerObj = authHandler(config);
+  const nlpHandlerObj = nlpHandler(config);
   const whatsAppHandlerObj = whatsAppHandler(config);
-  const expenseHandlerObj = expenseHandler(config, whatsAppHandlerObj);
+  const expenseHandlerObj = expenseHandler(
+    config,
+    whatsAppHandlerObj,
+    nlpHandlerObj
+  );
 
   // Authentications
   server.auth.strategy("jwt", "jwt", {

@@ -26,18 +26,26 @@ export type Expense = {
   categoryId: number;
 };
 
+export type NlpOutput = {
+  amount: number;
+  category: string;
+  text: string;
+};
+
 export type InWaMessageData = {
-  event: String;
-  instanceId: String;
+  event: string;
+  instanceId: string;
   data: {
     message: {
       _data: {
-        from: String;
-        to: String;
-        body: String;
+        from: string;
+        to: string;
+        body: string;
       };
     };
   };
 };
 
-export type ExtractExpenseDataFromWaError = "userDoesNotExist";
+export type ExtractExpenseDataFromWaError =
+  | "userDoesNotExist"
+  | "invalidUserMessage";

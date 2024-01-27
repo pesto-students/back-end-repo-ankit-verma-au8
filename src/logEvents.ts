@@ -14,6 +14,8 @@ export type MqEvents = "mq-connection-failed" | "mq-connection-created";
 
 export type ExpenseEvents = "expense-saved" | "save-expense-failed";
 
+export type GptEvents = "gpt-expense-extracted";
+
 export type whatsAppEvents =
   | "whatsApp-message-sent"
   | "whatsApp-media-sent"
@@ -25,7 +27,8 @@ export type EventName =
   | UserEvents
   | MqEvents
   | ExpenseEvents
-  | whatsAppEvents;
+  | whatsAppEvents
+  | GptEvents;
 
 export function logEvent(
   eventName: EventName,
@@ -93,4 +96,10 @@ export function messageSendingFailed(data) {
 
 export function mediaSendingFailed(data) {
   logEvent("sending-media-failed", data);
+}
+
+//Gpt Events
+
+export function extractedExpenseFromGpt(data) {
+  logEvent("gpt-expense-extracted", data);
 }
