@@ -55,7 +55,13 @@ export default function expenseHandler(
         currentMonth,
         currentYear
       );
-      return { totalExpense: totalExpense[0] };
+      const expenseTrend = await repo.getExpenseTrends();
+      const categoryPercentage = await repo.getCategoryPercentage();
+      return {
+        totalExpense: totalExpense[0],
+        expenseTrend,
+        categoryPercentage,
+      };
     },
 
     saveDummyExpenses: async () => {

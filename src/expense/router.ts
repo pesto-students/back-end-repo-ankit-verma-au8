@@ -72,8 +72,12 @@ const expenseRouter = (server: Hapi.Server, expenseHandler) => {
     path: GET_EXPENSE_OVERVIEW.endPoint,
     options: {
       handler: async (request, h) => {
-        const response = await expenseHandler.getExpenseOverview();
-        return h.response(response).code(200);
+        try {
+          const response = await expenseHandler.getExpenseOverview();
+          return h.response(response).code(200);
+        } catch (er) {
+          console.log(er);
+        }
       },
       auth: GET_EXPENSE_OVERVIEW.auth,
       tags: GET_EXPENSE_OVERVIEW.tags,
