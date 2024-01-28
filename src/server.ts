@@ -5,6 +5,7 @@ import * as Vision from "@hapi/vision";
 import * as Jwt2 from "hapi-auth-jwt2";
 import _ from "ramda";
 import Path from "path";
+import HapiCron from "hapi-cron";
 const Inert = require("@hapi/inert");
 import DiagnosticRouter from "./diagnostic/router";
 
@@ -18,6 +19,7 @@ import AuthRouter from "./authentication/router";
 import ExpenseRouter from "./expense/router";
 import { WhatsAppHandlerObj } from "./whatsapp/types";
 import { nlpHandlerObj } from "./nlp/types";
+import { logger } from "./logger";
 
 export const init = async (
   config,
@@ -66,6 +68,25 @@ export const init = async (
     },
     {
       plugin: Jwt2,
+    },
+    {
+      plugin: HapiCron,
+      options: {
+        jobs: [
+          {
+            name: "Feed dummy data everyday",
+            time: "0 1 * * *",
+            timezone: "Asia/Kolkata",
+            request: {
+              method: "POST",
+              url: `/expenses/user/dummy-data`,
+            },
+            onComplete: (res) => {
+              logger.info("Completed start heater CRON, ", res);
+            },
+          },
+        ],
+      },
     },
   ]);
   const userHandlerObj = userHandler(config);

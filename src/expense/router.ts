@@ -5,6 +5,7 @@ import {
   SAVE_EXPENSE,
   SAVE_WA_EXPENSE,
   GET_EXPENSE_OVERVIEW,
+  SAVE_DUMMY_EXPENSE_DATA,
 } from "./constant";
 
 const expenseRouter = (server: Hapi.Server, expenseHandler) => {
@@ -81,6 +82,23 @@ const expenseRouter = (server: Hapi.Server, expenseHandler) => {
       },
       description: GET_EXPENSE_OVERVIEW.description,
       notes: GET_EXPENSE_OVERVIEW.notes,
+    },
+  });
+  server.route({
+    method: SAVE_DUMMY_EXPENSE_DATA.method,
+    path: SAVE_DUMMY_EXPENSE_DATA.endPoint,
+    options: {
+      handler: async (request, h) => {
+        await expenseHandler.saveDummyExpenses();
+        return h.response({}).code(200);
+      },
+      auth: SAVE_DUMMY_EXPENSE_DATA.auth,
+      tags: SAVE_DUMMY_EXPENSE_DATA.tags,
+      plugins: {
+        reCaptcha: SAVE_DUMMY_EXPENSE_DATA.reCaptcha,
+      },
+      description: SAVE_DUMMY_EXPENSE_DATA.description,
+      notes: SAVE_DUMMY_EXPENSE_DATA.notes,
     },
   });
 };

@@ -6,6 +6,8 @@ import { extractExpenseDataFromWa } from "./domain";
 import { WhatsAppHandlerObj } from "../../src/whatsapp/types";
 import { renderTemplate } from "../../src/whatsapp/domain";
 import { nlpHandlerObj } from "../../src/nlp/types";
+import { getRandomValueFromArray } from "test/env/factories";
+import db from "../db";
 
 export default function expenseHandler(
   config,
@@ -54,6 +56,27 @@ export default function expenseHandler(
         currentYear
       );
       return { totalExpense: totalExpense[0] };
+    },
+
+    saveDummyExpenses: async () => {
+      const categories = await db("expenseCategories").select("*");
+      const user = await db("users")
+        .select("*")
+        .where({ waNumber: "918588025016" })
+        .first();
+      for (let j = 0; j < 20; j++) {
+        const category = getRandomValueFromArray(categories);
+        const min = 50;
+        const max = 5000;
+        const randomAm = Math.floor(Math.random() * (max - min + 1)) + min;
+        const textMessage = `Spent ${randomAm} on ${category.name}`;
+        await db("expenses").insert({
+          userId: user.id,
+          amount: randomAm,
+          textMessage,
+          categoryId: category.id,
+        });
+      }
     },
   };
 }

@@ -21,7 +21,6 @@ export async function seed(knex: Knex): Promise<void> {
       const randomAm = Math.floor(Math.random() * (max - min + 1)) + min;
       const textMessage = `Spent ${randomAm} on ${category.name}`;
 
-      console.log(randomTimestampYesterday);
       await knex("expenses").insert({
         userId: user.id,
         amount: randomAm,

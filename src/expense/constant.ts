@@ -38,3 +38,14 @@ export const GET_EXPENSE_OVERVIEW = {
   description: "Get expense overview",
   notes: "Get expense overview",
 };
+
+export const SAVE_DUMMY_EXPENSE_DATA = {
+  endPoint: "/expenses/user/dummy-data",
+  method: "POST",
+  auth: false,
+  tags: ["save-dummy-expense-data", "api", "expense"],
+  failAction: "log",
+  reCaptcha: false,
+  description: "Save expense dummy data",
+  notes: "Save expense dummy data",
+};
