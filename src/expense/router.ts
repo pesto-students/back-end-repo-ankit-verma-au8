@@ -6,6 +6,9 @@ import {
   SAVE_WA_EXPENSE,
   GET_EXPENSE_OVERVIEW,
   SAVE_DUMMY_EXPENSE_DATA,
+  GET_USER_EXPENSES_LIST,
+  GET_TOTAL_EXPENSE,
+  GET_CATEGORY_PERCENTAGE,
 } from "./constant";
 
 const expenseRouter = (server: Hapi.Server, expenseHandler) => {
@@ -72,12 +75,8 @@ const expenseRouter = (server: Hapi.Server, expenseHandler) => {
     path: GET_EXPENSE_OVERVIEW.endPoint,
     options: {
       handler: async (request, h) => {
-        try {
-          const response = await expenseHandler.getExpenseOverview();
-          return h.response(response).code(200);
-        } catch (er) {
-          console.log(er);
-        }
+        const response = await expenseHandler.getExpenseTrend();
+        return h.response(response).code(200);
       },
       auth: GET_EXPENSE_OVERVIEW.auth,
       tags: GET_EXPENSE_OVERVIEW.tags,
@@ -86,6 +85,101 @@ const expenseRouter = (server: Hapi.Server, expenseHandler) => {
       },
       description: GET_EXPENSE_OVERVIEW.description,
       notes: GET_EXPENSE_OVERVIEW.notes,
+    },
+  });
+
+  server.route({
+    method: GET_CATEGORY_PERCENTAGE.method,
+    path: GET_CATEGORY_PERCENTAGE.endPoint,
+    options: {
+      handler: async (request, h) => {
+        const { month, year } = request.query;
+        const response = await expenseHandler.getCategoryPercentage(
+          month,
+          year
+        );
+        return h.response(response).code(200);
+      },
+      auth: GET_CATEGORY_PERCENTAGE.auth,
+      tags: GET_CATEGORY_PERCENTAGE.tags,
+      validate: {
+        query: GET_CATEGORY_PERCENTAGE.querySchema,
+        options: {
+          abortEarly: true,
+        },
+        failAction: async (request, h, err) => {
+          throw err;
+        },
+      },
+      plugins: {
+        reCaptcha: GET_CATEGORY_PERCENTAGE.reCaptcha,
+      },
+      description: GET_CATEGORY_PERCENTAGE.description,
+      notes: GET_CATEGORY_PERCENTAGE.notes,
+    },
+  });
+
+  server.route({
+    method: GET_TOTAL_EXPENSE.method,
+    path: GET_TOTAL_EXPENSE.endPoint,
+    options: {
+      handler: async (request, h) => {
+        const { month, year } = request.query;
+        const response = await expenseHandler.getTotalExpense(month, year);
+        return h.response(response).code(200);
+      },
+      auth: GET_TOTAL_EXPENSE.auth,
+      tags: GET_TOTAL_EXPENSE.tags,
+      validate: {
+        query: GET_TOTAL_EXPENSE.querySchema,
+        options: {
+          abortEarly: true,
+        },
+        failAction: async (request, h, err) => {
+          throw err;
+        },
+      },
+      plugins: {
+        reCaptcha: GET_TOTAL_EXPENSE.reCaptcha,
+      },
+      description: GET_TOTAL_EXPENSE.description,
+      notes: GET_TOTAL_EXPENSE.notes,
+    },
+  });
+
+  server.route({
+    method: GET_USER_EXPENSES_LIST.method,
+    path: GET_USER_EXPENSES_LIST.endPoint,
+    options: {
+      handler: async (request, h) => {
+        try {
+          const { limit, page } = request.query;
+          const response = await expenseHandler.getUserExpenseList(
+            request.auth.credentials.userId,
+            limit,
+            page
+          );
+          return h.response(response).code(200);
+        } catch (err) {
+          console.log(err);
+        }
+      },
+      auth: GET_USER_EXPENSES_LIST.auth,
+      tags: GET_USER_EXPENSES_LIST.tags,
+      validate: {
+        query: GET_USER_EXPENSES_LIST.querySchema,
+        options: {
+          abortEarly: true,
+        },
+        failAction: async (request, h, err) => {
+          throw err;
+        },
+      },
+      plugins: {
+        reCaptcha: GET_USER_EXPENSES_LIST.reCaptcha,
+      },
+      description: GET_USER_EXPENSES_LIST.description,
+      notes: GET_USER_EXPENSES_LIST.notes,
     },
   });
   server.route({

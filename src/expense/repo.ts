@@ -64,7 +64,7 @@ export const getExpenseTrends = async () => {
   });
 };
 
-export const getCategoryPercentage = async () => {
+export const getCategoryPercentage = async (month, year) => {
   const query = `
   SELECT
   "categoryId",
@@ -74,12 +74,36 @@ export const getCategoryPercentage = async () => {
     "expenses"
     JOIN "expenseCategories" ON "expenses"."categoryId" = "expenseCategories"."id"
   WHERE
-    EXTRACT(MONTH FROM "createdAt") = 1 AND EXTRACT(YEAR FROM "createdAt") = 2024
+    EXTRACT(MONTH FROM "createdAt") = :month AND EXTRACT(YEAR FROM "createdAt") = :year
   GROUP BY
     "categoryId", "categoryName";
-
   `;
-  return await db.raw(query).then((r) => {
+  return await db.raw(query, { month, year }).then((r) => {
+    return r.rows;
+  });
+};
+
+export const getUserExpenseList = async (userId, limit, offset) => {
+  const query = `
+  SELECT
+    expenses.id,
+    "amount",
+    "textMessage",
+    "expenseCategories"."name" AS "categoryName",
+    expenses."createdAt"
+  FROM
+    "expenses"
+    JOIN "users" ON "expenses"."userId" = "users"."id"
+    JOIN "expenseCategories" ON "expenses"."categoryId" = "expenseCategories"."id"
+  WHERE
+    "users"."id" = :userId
+  ORDER BY
+    "expenses"."createdAt" DESC
+  LIMIT :limit
+  OFFSET :offset;
+;
+  `;
+  return await db.raw(query, { userId, limit, offset }).then((r) => {
     return r.rows;
   });
 };

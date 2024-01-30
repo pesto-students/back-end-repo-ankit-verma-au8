@@ -47,19 +47,46 @@ export default function expenseHandler(
       return right(result);
     },
 
-    getExpenseOverview: async () => {
+    getUserExpenseList: async (userId, limit, page) => {
+      return await repo.getUserExpenseList(userId, limit, page - 1);
+    },
+
+    getTotalExpense: async (month = null, year = null) => {
       const currentDate = new Date();
       const currentMonth = currentDate.getMonth() + 1;
       const currentYear = currentDate.getFullYear();
       const totalExpense = await repo.getTotalExpenseForMonth(
-        currentMonth,
-        currentYear
+        month ? month : currentMonth,
+        year ? year : currentYear
       );
+      if (totalExpense.length == 0) {
+        return {
+          totalExpense: [
+            {
+              month,
+              year,
+              totalAmount: 0,
+            },
+          ],
+        };
+      }
+      return { totalExpense };
+    },
+
+    getExpenseTrend: async () => {
       const expenseTrend = await repo.getExpenseTrends();
-      const categoryPercentage = await repo.getCategoryPercentage();
+      return expenseTrend;
+    },
+
+    getCategoryPercentage: async (month, year) => {
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1;
+      const currentYear = currentDate.getFullYear();
+      const categoryPercentage = await repo.getCategoryPercentage(
+        month ? month : currentMonth,
+        year ? year : currentYear
+      );
       return {
-        totalExpense: totalExpense[0],
-        expenseTrend,
         categoryPercentage,
       };
     },
