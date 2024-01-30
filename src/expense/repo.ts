@@ -26,11 +26,11 @@ export const getTotalExpenseForMonth = async (month, year) => {
   });
 };
 
-export const getExpenseTrends = async () => {
+export const getExpenseTrends = async (limit, page) => {
   const query = `
   WITH RECURSIVE date_series AS (
     SELECT generate_series(
-             CURRENT_DATE - INTERVAL '8 days',
+             CURRENT_DATE - INTERVAL '30 days',
              CURRENT_DATE,
              INTERVAL '1 day'
            )::DATE AS date
@@ -57,9 +57,10 @@ export const getExpenseTrends = async () => {
   GROUP BY
     ds.date
   ORDER BY
-    ds.date DESC;
+    ds.date DESC
+  LIMIT :limit  OFFSET :page;
   `;
-  return await db.raw(query).then((r) => {
+  return await db.raw(query, { limit, page: page - 1 }).then((r) => {
     return r.rows;
   });
 };

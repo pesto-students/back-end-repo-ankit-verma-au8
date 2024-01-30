@@ -73,8 +73,8 @@ export default function expenseHandler(
       return { totalExpense };
     },
 
-    getExpenseTrend: async () => {
-      const expenseTrend = await repo.getExpenseTrends();
+    getExpenseTrend: async (limit, page) => {
+      const expenseTrend = await repo.getExpenseTrends(limit, page);
       return expenseTrend;
     },
 

@@ -55,6 +55,11 @@ export const getUserExpensesListSchema = Joi.object({
   page: Joi.number().positive().greater(0).required(),
 });
 
+export const getUserExpensesTrendsSchema = Joi.object({
+  limit: Joi.number().positive().greater(0).required(),
+  page: Joi.number().positive().greater(0).required(),
+});
+
 export const getTotalExpenseSchema = Joi.object({
   month: Joi.number().optional(),
   year: Joi.number().optional(),

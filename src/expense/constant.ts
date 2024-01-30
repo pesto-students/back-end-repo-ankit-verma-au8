@@ -2,6 +2,7 @@ import {
   getCategoryPercentageSchema,
   getTotalExpenseSchema,
   getUserExpensesListSchema,
+  getUserExpensesTrendsSchema,
   saveExpenseSchema,
 } from "./types";
 
@@ -40,6 +41,7 @@ export const GET_EXPENSE_OVERVIEW = {
   tags: ["get-expense-overview", "api", "expense"],
   failAction: "log",
   reCaptcha: false,
+  querySchema: getUserExpensesTrendsSchema,
   description: "Get expense overview",
   notes: "Get expense overview",
 };

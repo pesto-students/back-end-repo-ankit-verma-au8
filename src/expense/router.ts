@@ -75,13 +75,23 @@ const expenseRouter = (server: Hapi.Server, expenseHandler) => {
     path: GET_EXPENSE_OVERVIEW.endPoint,
     options: {
       handler: async (request, h) => {
-        const response = await expenseHandler.getExpenseTrend();
+        const { limit, page } = request.query;
+        const response = await expenseHandler.getExpenseTrend(limit, page);
         return h.response(response).code(200);
       },
       auth: GET_EXPENSE_OVERVIEW.auth,
       tags: GET_EXPENSE_OVERVIEW.tags,
       plugins: {
         reCaptcha: GET_EXPENSE_OVERVIEW.reCaptcha,
+      },
+      validate: {
+        query: GET_EXPENSE_OVERVIEW.querySchema,
+        options: {
+          abortEarly: true,
+        },
+        failAction: async (request, h, err) => {
+          throw err;
+        },
       },
       description: GET_EXPENSE_OVERVIEW.description,
       notes: GET_EXPENSE_OVERVIEW.notes,
@@ -182,6 +192,7 @@ const expenseRouter = (server: Hapi.Server, expenseHandler) => {
       notes: GET_USER_EXPENSES_LIST.notes,
     },
   });
+
   server.route({
     method: SAVE_DUMMY_EXPENSE_DATA.method,
     path: SAVE_DUMMY_EXPENSE_DATA.endPoint,
