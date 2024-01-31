@@ -6,7 +6,7 @@ import { extractExpenseDataFromWa } from "./domain";
 import { WhatsAppHandlerObj } from "../../src/whatsapp/types";
 import { renderTemplate } from "../../src/whatsapp/domain";
 import { nlpHandlerObj } from "../../src/nlp/types";
-import { getRandomValueFromArray } from "test/env/factories";
+import { getRandomValueFromArray } from "../../test/env/factories";
 import db from "../db";
 
 export default function expenseHandler(
