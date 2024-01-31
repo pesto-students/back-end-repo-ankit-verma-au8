@@ -8,6 +8,7 @@ import { renderTemplate } from "../../src/whatsapp/domain";
 import { nlpHandlerObj } from "../../src/nlp/types";
 import { getRandomValueFromArray } from "../../test/env/factories";
 import db from "../db";
+import * as _ from "ramda";
 
 export default function expenseHandler(
   config,
@@ -42,7 +43,19 @@ export default function expenseHandler(
         }
         return right(expenseDetails.left);
       }
-      const result = await repo.saveExpense(expenseDetails.right);
+      const result = await repo.saveExpense(
+        _.omit(["categoryName"], expenseDetails.right)
+      );
+      const messageText = renderTemplate("ExpenseSavedTemplate", {
+        data: {
+          amount: expenseDetails.right.amount,
+          category: expenseDetails.right.categoryName,
+        },
+      });
+      await whatsAppHandler.sendTextMessage(
+        expenseWaDetails.data.message._data.from.substring(0, 12),
+        messageText
+      );
       expenseSaved(result);
       return right(result);
     },

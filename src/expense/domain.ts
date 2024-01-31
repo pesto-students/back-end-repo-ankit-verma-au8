@@ -40,6 +40,7 @@ export const extractExpenseDataFromWa = async (
     amount: extractedData.amount,
     textMessage: userText,
     categoryId: category.id,
+    categoryName: extractedData.category,
   };
   return right(expenseData);
 };

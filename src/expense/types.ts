@@ -24,6 +24,7 @@ export type Expense = {
   amount: Number;
   textMessage: String;
   categoryId: number;
+  categoryName?: string;
 };
 
 export type NlpOutput = {

@@ -3,7 +3,8 @@ import nunjucks from "nunjucks";
 
 export type TemplateName =
   | "UserDoesNotExistTemplate"
-  | "UserMessageNotValidTemplate";
+  | "UserMessageNotValidTemplate"
+  | "ExpenseSavedTemplate";
 
 export const UserDoesNotExistTemplate = `Hello,
 Sorry! It seems your account does not exist. Please visit https://trackpe.com to create an account.
@@ -15,7 +16,12 @@ export const UserMessageNotValidTemplate = `This is not a valid message. To save
 2. 1500 on foods
 3. 1000 on Petrol`;
 
+export const ExpenseSavedTemplate = `Your expense has been saved:
+Amount: {{data.amount}}
+Category:{{data.category}}`;
+
 export const AllTemplates = {
   UserDoesNotExistTemplate,
   UserMessageNotValidTemplate,
+  ExpenseSavedTemplate,
 };
