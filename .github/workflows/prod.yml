@@ -19,7 +19,9 @@ jobs:
           touch .env
           echo DB_CONNECTION_URI=${{ secrets.DB_CONNECTION_URI }} >> .env
           echo TEST_DB_CONNECTION_URI=${{ secrets.TEST_DB_CONNECTION_URI }} >> .env
-          cat .env
+          echo WAPI_INSTANCE_ID=${{secrets.WAPI_INSTANCE_ID}} >> .env
+          echo WAPI_API_KEY=${{secrets.WAPI_API_KEY}} >> .env
+          echo GPT_API_KEY=${{secrets.GPT_API_KEY}} >> .env
 
       - run: npm install
       - run: npm run db:migrate
