@@ -164,12 +164,14 @@ const expenseRouter = (server: Hapi.Server, expenseHandler) => {
     options: {
       handler: async (request, h) => {
         try {
-          const { limit, page, categoryId } = request.query;
+          const { limit, page, categoryId, from, to } = request.query;
           const response = await expenseHandler.getUserExpenseList(
             request.auth.credentials.userId,
             limit,
             page,
-            categoryId
+            categoryId,
+            from,
+            to
           );
           return h.response(response).code(200);
         } catch (err) {

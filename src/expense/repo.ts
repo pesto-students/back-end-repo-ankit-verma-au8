@@ -84,7 +84,15 @@ export const getCategoryPercentage = async (month, year) => {
   });
 };
 
-export const getUserExpenseList = async (userId, limit, offset, categoryId) => {
+export const getUserExpenseList = async (
+  userId,
+  limit,
+  offset,
+  categoryId,
+  from,
+  to
+) => {
+  console.log({ from, to });
   const query = `
   SELECT
     expenses.id,
@@ -97,7 +105,9 @@ export const getUserExpenseList = async (userId, limit, offset, categoryId) => {
     JOIN "users" ON "expenses"."userId" = "users"."id"
     JOIN "expenseCategories" ON "expenses"."categoryId" = "expenseCategories"."id"
   WHERE
-    "users"."id" = :userId ${categoryId ? 'AND "categoryId"=:categoryId' : ""}
+    "users"."id" = :userId ${categoryId ? 'AND "categoryId"=:categoryId' : ""}${
+    from ? ' AND expenses."createdAt"::date >= :from' : ""
+  } ${to ? ' AND expenses."createdAt"::date <= :to' : ""}
   ORDER BY
     "expenses"."createdAt" DESC
   LIMIT :limit
@@ -105,7 +115,7 @@ export const getUserExpenseList = async (userId, limit, offset, categoryId) => {
 ;
   `;
   return await db
-    .raw(query, { userId, limit, offset: offset * limit, categoryId })
+    .raw(query, { userId, limit, offset: offset * limit, categoryId, from, to })
     .then((r) => {
       return r.rows;
     });

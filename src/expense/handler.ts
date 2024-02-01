@@ -60,8 +60,15 @@ export default function expenseHandler(
       return right(result);
     },
 
-    getUserExpenseList: async (userId, limit, page, categoryId) => {
-      return await repo.getUserExpenseList(userId, limit, page - 1, categoryId);
+    getUserExpenseList: async (userId, limit, page, categoryId, from, to) => {
+      return await repo.getUserExpenseList(
+        userId,
+        limit,
+        page - 1,
+        categoryId,
+        from,
+        to
+      );
     },
 
     getTotalExpense: async (month = null, year = null) => {
