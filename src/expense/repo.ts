@@ -104,7 +104,9 @@ export const getUserExpenseList = async (userId, limit, offset) => {
   OFFSET :offset;
 ;
   `;
-  return await db.raw(query, { userId, limit, offset }).then((r) => {
-    return r.rows;
-  });
+  return await db
+    .raw(query, { userId, limit, offset: offset * limit })
+    .then((r) => {
+      return r.rows;
+    });
 };
