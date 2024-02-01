@@ -13,6 +13,10 @@ export type UserEvents =
 export type MqEvents = "mq-connection-failed" | "mq-connection-created";
 
 export type ExpenseEvents = "expense-saved" | "save-expense-failed";
+export type BudgetEvents =
+  | "budget-saved"
+  | "budget-updated"
+  | "save-budget-failed";
 
 export type GptEvents = "gpt-expense-extracted";
 
@@ -28,7 +32,8 @@ export type EventName =
   | MqEvents
   | ExpenseEvents
   | whatsAppEvents
-  | GptEvents;
+  | GptEvents
+  | BudgetEvents;
 
 export function logEvent(
   eventName: EventName,
@@ -102,4 +107,18 @@ export function mediaSendingFailed(data) {
 
 export function extractedExpenseFromGpt(data) {
   logEvent("gpt-expense-extracted", data);
+}
+
+//Budget events
+
+export function budgetSaved(data) {
+  logEvent("budget-saved", data);
+}
+
+export function budgetUpdated(data) {
+  logEvent("budget-updated", data);
+}
+
+export function saveBudgetFailed(data) {
+  logEvent("budget-updated", data);
 }

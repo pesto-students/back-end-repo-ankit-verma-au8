@@ -12,11 +12,12 @@ import DiagnosticRouter from "./diagnostic/router";
 import userHandler from "./user/handler";
 import authHandler from "./authentication/handler";
 import expenseHandler from "./expense/handler";
-import nlpHandler from "./nlp/handler";
+import budgetHandler from "./budget/handler";
 
 import UserRouter from "./user/router";
 import AuthRouter from "./authentication/router";
 import ExpenseRouter from "./expense/router";
+import BudgetRouter from "./budget/router";
 import { WhatsAppHandlerObj } from "./whatsapp/types";
 import { nlpHandlerObj } from "./nlp/types";
 import { logger } from "./logger";
@@ -96,6 +97,7 @@ export const init = async (
     whatsAppHandlerObj,
     nlpHandlerObj
   );
+  const budgetHandlerObj = budgetHandler();
 
   // Authentications
   server.auth.strategy("jwt", "jwt", {
@@ -108,7 +110,7 @@ export const init = async (
   UserRouter(server, userHandlerObj);
   AuthRouter(server, authHandlerObj);
   ExpenseRouter(server, expenseHandlerObj);
-
+  BudgetRouter(server, budgetHandlerObj);
   DiagnosticRouter(server);
   await server.initialize();
   return {
