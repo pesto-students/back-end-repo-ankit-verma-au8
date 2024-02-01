@@ -60,8 +60,8 @@ export default function expenseHandler(
       return right(result);
     },
 
-    getUserExpenseList: async (userId, limit, page) => {
-      return await repo.getUserExpenseList(userId, limit, page - 1);
+    getUserExpenseList: async (userId, limit, page, categoryId) => {
+      return await repo.getUserExpenseList(userId, limit, page - 1, categoryId);
     },
 
     getTotalExpense: async (month = null, year = null) => {
@@ -123,6 +123,11 @@ export default function expenseHandler(
           categoryId: category.id,
         });
       }
+    },
+
+    getExpenseCategories: async () => {
+      const result = await repo.getExpenseCategory({});
+      return result;
     },
   };
 }

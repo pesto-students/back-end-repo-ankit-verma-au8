@@ -46,6 +46,19 @@ export const GET_EXPENSE_OVERVIEW = {
   notes: "Get expense overview",
 };
 
+export const GET_EXPENSE_CATEGORIES = {
+  endPoint: "/expense/categories",
+  method: "GET",
+  auth: {
+    scope: ["user"],
+  },
+  tags: ["get-expense-categories", "api", "expense"],
+  failAction: "log",
+  reCaptcha: false,
+  description: "Get expense categories",
+  notes: "Get expense categories",
+};
+
 export const GET_CATEGORY_PERCENTAGE = {
   endPoint: "/user/expense/categories",
   method: "GET",

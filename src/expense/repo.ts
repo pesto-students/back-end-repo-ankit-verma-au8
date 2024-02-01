@@ -84,7 +84,7 @@ export const getCategoryPercentage = async (month, year) => {
   });
 };
 
-export const getUserExpenseList = async (userId, limit, offset) => {
+export const getUserExpenseList = async (userId, limit, offset, categoryId) => {
   const query = `
   SELECT
     expenses.id,
@@ -97,7 +97,7 @@ export const getUserExpenseList = async (userId, limit, offset) => {
     JOIN "users" ON "expenses"."userId" = "users"."id"
     JOIN "expenseCategories" ON "expenses"."categoryId" = "expenseCategories"."id"
   WHERE
-    "users"."id" = :userId
+    "users"."id" = :userId ${categoryId ? 'AND "categoryId"=:categoryId' : ""}
   ORDER BY
     "expenses"."createdAt" DESC
   LIMIT :limit
@@ -105,8 +105,12 @@ export const getUserExpenseList = async (userId, limit, offset) => {
 ;
   `;
   return await db
-    .raw(query, { userId, limit, offset: offset * limit })
+    .raw(query, { userId, limit, offset: offset * limit, categoryId })
     .then((r) => {
       return r.rows;
     });
+};
+
+export const getExpenseCategory = async (q) => {
+  return await db("expenseCategories").select("*").where(q);
 };

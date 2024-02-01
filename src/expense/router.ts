@@ -9,6 +9,7 @@ import {
   GET_USER_EXPENSES_LIST,
   GET_TOTAL_EXPENSE,
   GET_CATEGORY_PERCENTAGE,
+  GET_EXPENSE_CATEGORIES,
 } from "./constant";
 
 const expenseRouter = (server: Hapi.Server, expenseHandler) => {
@@ -163,11 +164,12 @@ const expenseRouter = (server: Hapi.Server, expenseHandler) => {
     options: {
       handler: async (request, h) => {
         try {
-          const { limit, page } = request.query;
+          const { limit, page, categoryId } = request.query;
           const response = await expenseHandler.getUserExpenseList(
             request.auth.credentials.userId,
             limit,
-            page
+            page,
+            categoryId
           );
           return h.response(response).code(200);
         } catch (err) {
@@ -208,6 +210,24 @@ const expenseRouter = (server: Hapi.Server, expenseHandler) => {
       },
       description: SAVE_DUMMY_EXPENSE_DATA.description,
       notes: SAVE_DUMMY_EXPENSE_DATA.notes,
+    },
+  });
+
+  server.route({
+    method: GET_EXPENSE_CATEGORIES.method,
+    path: GET_EXPENSE_CATEGORIES.endPoint,
+    options: {
+      handler: async (request, h) => {
+        const response = await expenseHandler.getExpenseCategories();
+        return h.response(response).code(200);
+      },
+      auth: GET_EXPENSE_CATEGORIES.auth,
+      tags: GET_EXPENSE_CATEGORIES.tags,
+      plugins: {
+        reCaptcha: GET_EXPENSE_CATEGORIES.reCaptcha,
+      },
+      description: GET_EXPENSE_CATEGORIES.description,
+      notes: GET_EXPENSE_CATEGORIES.notes,
     },
   });
 };

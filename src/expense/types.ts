@@ -54,6 +54,7 @@ export type ExtractExpenseDataFromWaError =
 export const getUserExpensesListSchema = Joi.object({
   limit: Joi.number().positive().greater(0).required(),
   page: Joi.number().positive().greater(0).required(),
+  categoryId: Joi.number().positive().greater(0).optional(),
 });
 
 export const getUserExpensesTrendsSchema = Joi.object({
