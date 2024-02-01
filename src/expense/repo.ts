@@ -36,7 +36,7 @@ export const getExpenseTrends = async (limit, page) => {
            )::DATE AS date
   )
   SELECT
-    to_char(ds.date, 'YYYY-MM-DD') AS formatted_date,
+    to_char(ds.date, 'YYYY-MM-DD') AS identifier,
     COALESCE(json_agg(e.expense), '[]'::json) AS expenses
   FROM
     date_series ds
@@ -60,7 +60,7 @@ export const getExpenseTrends = async (limit, page) => {
     ds.date DESC
   LIMIT :limit  OFFSET :page;
   `;
-  return await db.raw(query, { limit, page: page - 1 }).then((r) => {
+  return await db.raw(query, { limit, page: (page - 1) * limit }).then((r) => {
     return r.rows;
   });
 };
