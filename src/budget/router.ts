@@ -43,22 +43,18 @@ const budgetRouter = (server: Hapi.Server, budgetHandler) => {
     path: UPDATE_BUDGET.endPoint,
     options: {
       handler: async (request, h) => {
-        try {
-          const budgetDetails = request.payload;
-          const response = await budgetHandler.updateBudget(
-            {
-              ...budgetDetails,
-              userId: request.auth.credentials.userId,
-            },
-            request.params.id
-          );
-          if (isLeft(response)) {
-            return h.response({ message: response.left }).code(400);
-          }
-          return h.response(response.right).code(201);
-        } catch (e) {
-          console.log(e);
+        const budgetDetails = request.payload;
+        const response = await budgetHandler.updateBudget(
+          {
+            ...budgetDetails,
+            userId: request.auth.credentials.userId,
+          },
+          request.params.id
+        );
+        if (isLeft(response)) {
+          return h.response({ message: response.left }).code(400);
         }
+        return h.response(response.right).code(201);
       },
       auth: UPDATE_BUDGET.auth,
       tags: UPDATE_BUDGET.tags,
