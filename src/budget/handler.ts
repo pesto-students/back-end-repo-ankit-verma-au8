@@ -24,9 +24,9 @@ export default function expenseHandler() {
       return right(result);
     },
 
-    updateBudget: async (budgetDetails: Budget) => {
+    updateBudget: async (budgetDetails: Budget, id) => {
       const budget = await repo.getBudgetDetails({
-        id: budgetDetails.budgetId,
+        id,
       });
       if (_.isNil(budget)) {
         return left("Budget doesn't exists for this category");

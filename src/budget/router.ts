@@ -45,10 +45,13 @@ const budgetRouter = (server: Hapi.Server, budgetHandler) => {
       handler: async (request, h) => {
         try {
           const budgetDetails = request.payload;
-          const response = await budgetHandler.updateBudget({
-            ...budgetDetails,
-            userId: request.auth.credentials.userId,
-          });
+          const response = await budgetHandler.updateBudget(
+            {
+              ...budgetDetails,
+              userId: request.auth.credentials.userId,
+            },
+            request.params.id
+          );
           if (isLeft(response)) {
             return h.response({ message: response.left }).code(400);
           }
@@ -61,6 +64,7 @@ const budgetRouter = (server: Hapi.Server, budgetHandler) => {
       tags: UPDATE_BUDGET.tags,
       validate: {
         payload: UPDATE_BUDGET.payloadSchema,
+        params: UPDATE_BUDGET.paramSchema,
         options: {
           abortEarly: true,
         },

@@ -1,4 +1,8 @@
-import { saveBudgetSchema, updateBudgetSchema } from "./types";
+import {
+  saveBudgetSchema,
+  updateBudgetSchema,
+  updateBudgetParamSchema,
+} from "./types";
 
 export const SAVE_BUDGET = {
   endPoint: "/user/budget",
@@ -15,7 +19,7 @@ export const SAVE_BUDGET = {
 };
 
 export const UPDATE_BUDGET = {
-  endPoint: "/user/budget",
+  endPoint: "/user/budget/{id}",
   method: "PUT",
   auth: {
     scope: ["user"],
@@ -24,6 +28,7 @@ export const UPDATE_BUDGET = {
   failAction: "log",
   reCaptcha: false,
   payloadSchema: updateBudgetSchema,
+  paramSchema: updateBudgetParamSchema,
   description: "Update budget api",
   notes: "Update budget api",
 };
