@@ -1,7 +1,7 @@
 import * as Hapi from "@hapi/hapi";
 import { isLeft, fold } from "fp-ts/lib/Either";
 import * as _ from "ramda";
-import { SAVE_BUDGET, UPDATE_BUDGET } from "./constant";
+import { SAVE_BUDGET, UPDATE_BUDGET, GET_BUDGET } from "./constant";
 
 const budgetRouter = (server: Hapi.Server, budgetHandler) => {
   server.route({
@@ -54,7 +54,7 @@ const budgetRouter = (server: Hapi.Server, budgetHandler) => {
         if (isLeft(response)) {
           return h.response({ message: response.left }).code(400);
         }
-        return h.response(response.right).code(201);
+        return h.response(response.right).code(200);
       },
       auth: UPDATE_BUDGET.auth,
       tags: UPDATE_BUDGET.tags,
@@ -73,6 +73,29 @@ const budgetRouter = (server: Hapi.Server, budgetHandler) => {
       },
       description: UPDATE_BUDGET.description,
       notes: UPDATE_BUDGET.notes,
+    },
+  });
+
+  server.route({
+    method: GET_BUDGET.method,
+    path: GET_BUDGET.endPoint,
+    options: {
+      handler: async (request, h) => {
+        const response = await budgetHandler.getBudget(
+          request.auth.credentials.userId
+        );
+        if (isLeft(response)) {
+          return h.response({ message: response.left }).code(400);
+        }
+        return h.response(response.right).code(200);
+      },
+      auth: GET_BUDGET.auth,
+      tags: GET_BUDGET.tags,
+      plugins: {
+        reCaptcha: GET_BUDGET.reCaptcha,
+      },
+      description: GET_BUDGET.description,
+      notes: GET_BUDGET.notes,
     },
   });
 };

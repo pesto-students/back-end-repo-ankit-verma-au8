@@ -4,6 +4,26 @@ import * as repo from "./repo";
 import { Budget } from "./types";
 import db from "../db";
 import * as _ from "ramda";
+import { getTotalExpenseForCategory } from "src/expense/repo";
+
+function getMonthStartAndEndDates() {
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const startDate = new Date(year, month, 1);
+  const endDate = new Date(year, month + 1, 0);
+  const formattedStartDate = startDate.toLocaleString().split("T")[0];
+  const formattedEndDate = endDate.toLocaleString().split("T")[0];
+  return {
+    startDate: formattedStartDate,
+    endDate: formattedEndDate,
+  };
+}
+
+// Example usage
+const { startDate, endDate } = getMonthStartAndEndDates();
+console.log("Start Date:", startDate);
+console.log("End Date:", endDate);
 
 export default function expenseHandler() {
   return {
@@ -37,6 +57,24 @@ export default function expenseHandler() {
       );
       budgetUpdated(result);
       return right(result);
+    },
+
+    getBudget: async (userId) => {
+      const budgets = await repo.getBudgetsList({ userId });
+      const { startDate, endDate } = getMonthStartAndEndDates();
+      for (let budget of budgets) {
+        const data = await getTotalExpenseForCategory(
+          userId,
+          budget.categoryId,
+          startDate,
+          endDate
+        );
+        budget.categoryName = data[0]?.categoryName;
+        budget.startDate = startDate;
+        budget.endDate = endDate;
+        budget.totalExpense = data[0]?.totalExpense;
+      }
+      return right(budgets);
     },
   };
 }

@@ -11,3 +11,7 @@ export const updateBudget = async (budgetDetails, q) => {
 export const getBudgetDetails = async (q) => {
   return await db("budgets").select("*").where(q).first();
 };
+
+export const getBudgetsList = async (q) => {
+  return await db("budgets").select("*").where(q);
+};

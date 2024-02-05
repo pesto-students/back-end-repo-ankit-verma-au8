@@ -32,3 +32,16 @@ export const UPDATE_BUDGET = {
   description: "Update budget api",
   notes: "Update budget api",
 };
+
+export const GET_BUDGET = {
+  endPoint: "/user/budget",
+  method: "GET",
+  auth: {
+    scope: ["user"],
+  },
+  tags: ["get-budget", "api", "budget"],
+  failAction: "log",
+  reCaptcha: false,
+  description: "Get budget api",
+  notes: "Get budget api",
+};

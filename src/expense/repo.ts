@@ -124,3 +124,25 @@ export const getUserExpenseList = async (
 export const getExpenseCategory = async (q) => {
   return await db("expenseCategories").select("*").where(q);
 };
+
+export async function getTotalExpenseForCategory(userId, categoryId, from, to) {
+  const query = `
+    SELECT
+      "expenseCategories"."name" AS "categoryName",
+      SUM("amount") AS "totalExpense"
+    FROM
+      "expenses"
+      JOIN "users" ON "expenses"."userId" = "users"."id"
+      JOIN "expenseCategories" ON "expenses"."categoryId" = "expenseCategories"."id"
+    WHERE
+      "users"."id" = :userId
+      AND "categoryId" = :categoryId
+      AND "expenses"."createdAt"::date BETWEEN :from AND :to
+    GROUP BY
+      "expenseCategories"."name";
+  `;
+
+  return await db.raw(query, { userId, categoryId, from, to }).then((r) => {
+    return r.rows;
+  });
+}
