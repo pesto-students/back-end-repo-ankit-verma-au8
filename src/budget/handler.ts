@@ -4,7 +4,7 @@ import * as repo from "./repo";
 import { Budget } from "./types";
 import db from "../db";
 import * as _ from "ramda";
-import { getTotalExpenseForCategory } from "src/expense/repo";
+import { getTotalExpenseForCategory } from "../../src/expense/repo";
 
 function getMonthStartAndEndDates() {
   const currentDate = new Date();
