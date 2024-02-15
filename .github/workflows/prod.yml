@@ -43,7 +43,7 @@ jobs:
       - name: Push Image
         run: |
           echo "Push image"
-          docker tag regenera-core:latest ${{ secrets.ECR_REGISTRY_URI }}:$(date -u +"%Y%m%d%H%M%S")-${{ github.sha }}
+          docker tag trackpe-core:latest ${{ secrets.ECR_REGISTRY_URI }}:$(date -u +"%Y%m%d%H%M%S")-${{ github.sha }}
           docker push ${{ secrets.ECR_REGISTRY_URI }}:$(date -u +"%Y%m%d%H%M%S")-${{ github.sha }}
 
   deploy_prod:
