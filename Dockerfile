@@ -1,5 +1,5 @@
 #Which node version to use for the project
-FROM node:14.17.1
+FROM node:20.11.0
 
 #Create app directory
 WORKDIR /usr/src/app

@@ -1,13 +1,13 @@
 set -e
 
 # Env
-server_image_name=${1:-"hapi-core"}
+server_image_name=${1:-"trackpe-core"}
 database_image_name=${2:-"postgres"}
-database_name="hapi_core"
+database_name="trackpe_core"
 
-server_container_name="hapi_core_test"
-database_container_name="hapi_core_db"
-network_name="hapi_core_network"
+server_container_name="trackpe_core_test"
+database_container_name="trackpe_core_db"
+network_name="trackpe_core_network"
 
 echo "Clearing old containers if any"
 if [ "$(docker container ls -a | grep $server_container_name)" ]; then
@@ -38,7 +38,7 @@ docker exec $database_container_name createdb -U postgres $database_name
 
 echo "Running Test cases"
 
-if docker run --rm --name $server_container_name --net $network_name --link $database_container_name:postgres_container_db --env TEST_DB_CONNECTION_URI=postgres://postgres@postgres_container_db/hapi_core $server_image_name npm test; then
+if docker run --rm --name $server_container_name --net $network_name --link $database_container_name:postgres_container_db --env TEST_DB_CONNECTION_URI=postgres://postgres@postgres_container_db/trackpe_core $server_image_name npm test; then
   echo "Test Success"
   echo "Cleaning up"
   docker rm -f $server_container_name

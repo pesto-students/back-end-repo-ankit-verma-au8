@@ -1,31 +1,60 @@
-name: Prod server CI/CD
+name: TrackPe BE CI/CD
 
 on:
   push:
-    branches: [dev]
+    branches:
+      - dev
 
 jobs:
   build:
-    runs-on: [self-hosted, trackpe-prod]
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "14"
-      - uses: actions/checkout@v3
-      - name: "Create env file"
-        run: |
-          touch .env
-          echo DB_CONNECTION_URI=${{ secrets.DB_CONNECTION_URI }} >> .env
-          echo TEST_DB_CONNECTION_URI=${{ secrets.TEST_DB_CONNECTION_URI }} >> .env
-          echo WAPI_INSTANCE_ID=${{secrets.WAPI_INSTANCE_ID}} >> .env
-          echo WAPI_API_KEY=${{secrets.WAPI_API_KEY}} >> .env
-          echo GPT_API_KEY=${{secrets.GPT_API_KEY}} >> .env
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      - run: npm install
-      - run: npm run db:migrate
-      - run: npm test
-      - run: pm2 stop prod-server
-      - run: pm2 start prod-server
-      - run: pm2 save
+      - name: Build Image
+        run: |
+          echo "Building image"
+          ./build_docker.sh
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Test Image
+        run: |
+          echo "Testing image"
+          ./docker_run_test_cases.sh
+
+  push:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Login to ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY_URI }}
+
+      - name: Push Image
+        run: |
+          echo "Push image"
+          docker tag regenera-core:latest ${{ secrets.ECR_REGISTRY_URI }}:$(date -u +"%Y%m%d%H%M%S")-${{ github.sha }}
+          docker push ${{ secrets.ECR_REGISTRY_URI }}:$(date -u +"%Y%m%d%H%M%S")-${{ github.sha }}
+
+  deploy_prod:
+    runs-on: ubuntu-latest
+    needs: push
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Deploy to Prod
+        run: |
+          echo "Deploying to Prod server"
+          ~/deploy_server.sh
+          echo "Deployment completed.."
