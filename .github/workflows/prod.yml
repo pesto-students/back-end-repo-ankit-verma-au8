@@ -1,4 +1,4 @@
-name: TrackPe BE CI/CD
+name: TrackPe Server CI/CD
 
 on:
   push:
