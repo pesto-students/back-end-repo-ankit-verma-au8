@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, trackpe-prod]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -18,7 +18,7 @@ jobs:
           ./build_docker.sh
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, trackpe-prod]
     needs: build
     steps:
       - name: Checkout Repository
@@ -30,7 +30,7 @@ jobs:
           ./docker_run_test_cases.sh
 
   push:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, trackpe-prod]
     needs: test
     steps:
       - name: Checkout Repository
@@ -47,7 +47,7 @@ jobs:
           docker push ${{ secrets.ECR_REGISTRY_URI }}:$(date -u +"%Y%m%d%H%M%S")-${{ github.sha }}
 
   deploy_prod:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, trackpe-prod]
     needs: push
     steps:
       - name: Checkout Repository
