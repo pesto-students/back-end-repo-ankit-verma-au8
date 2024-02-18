@@ -56,5 +56,5 @@ jobs:
       - name: Deploy to Prod
         run: |
           echo "Deploying to Prod server"
-          ~/deploy_server.sh
+          ~/deploy_server.sh $(date -u +"%Y%m%d")-${{ github.sha }}
           echo "Deployment completed.."
