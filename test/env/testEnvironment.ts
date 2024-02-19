@@ -28,9 +28,13 @@ export const dummyWhatsAppHandler: WhatsAppHandlerObj = {
 export const dummyNlpHandlerObj: nlpHandlerObj = {
   extractExpenseDataFromFreeText: (textMessage: string) => {
     return {
-      amount: 50,
-      category: "Entertainment",
-      text: textMessage,
+      expenses: [
+        {
+          amount: 50,
+          category: "Entertainment",
+          text: textMessage,
+        },
+      ],
     };
   },
 };

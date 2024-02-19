@@ -27,11 +27,20 @@ export type Expense = {
   categoryName?: string;
 };
 
+export type ExpenseSaveResponse =
+  | "Expense saved"
+  | "User message is not valid"
+  | "User does not exist";
+
 export type NlpOutput = {
+  expenses: ExpenseArray;
+};
+
+export type ExpenseArray = Array<{
   amount: number;
   category: string;
   text: string;
-};
+}>;
 
 export type InWaMessageData = {
   event: string;

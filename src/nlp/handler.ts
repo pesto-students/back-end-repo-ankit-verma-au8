@@ -16,8 +16,10 @@ export default function nlpHandler(config): nlpHandlerObj {
           {
             role: "system",
             content: `You are a assistant which will convert the free text to structured 
-            expense object. Eg.- 'Spent 1000 Rs. to Clothes' will be converted to {amount:1000, 
-              category: 'Clothing', text:'Spent 1000 Rs. to Clothes'}. 
+            expense array of objects. Eg.- 'Spent 1000 Rs. to Clothes' will be converted to [{amount:1000, 
+              category: 'Clothing', text:'Spent 1000 Rs. to Clothes'}], 'Spent 1000 Rs. to Clothes, spent 2000 on patrol' will be converted to [{amount:1000, 
+                category: 'Clothing', text:'Spent 1000 Rs. to Clothes'}, {amount:2000, 
+                  category: 'Transportation', text:'Spent 2000 on patrol'}]
             You should use only these categories - ['Food/Drinks', 'Clothing', 'Technology', 
             'Transportation', 'Gifts', 'Entertainment', 'Books/Magazine', 'Education', 'Sports', 'Pets', 'Travel'],`,
           },

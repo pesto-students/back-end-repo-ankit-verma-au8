@@ -1,14 +1,23 @@
 import { Either, isLeft, right, left } from "fp-ts/lib/Either";
-import { expenseSaved } from "../logEvents";
+import {
+  expenseSaveFailed,
+  expenseSaved,
+  extractedExpenseFromGpt,
+} from "../logEvents";
 import * as repo from "./repo";
-import { Expense } from "./types";
-import { extractExpenseDataFromWa } from "./domain";
+import {
+  Expense,
+  ExpenseSaveResponse,
+  ExtractExpenseDataFromWaError,
+  NlpOutput,
+} from "./types";
 import { WhatsAppHandlerObj } from "../../src/whatsapp/types";
 import { renderTemplate } from "../../src/whatsapp/domain";
 import { nlpHandlerObj } from "../../src/nlp/types";
 import { getRandomValueFromArray } from "../../test/env/factories";
 import db from "../db";
 import * as _ from "ramda";
+import { getUserDetails } from "../../src/user/repo";
 
 export default function expenseHandler(
   config,
@@ -22,42 +31,59 @@ export default function expenseHandler(
       return right(result);
     },
 
-    saveWaExpense: async (expenseWaDetails) => {
-      const expenseDetails = await extractExpenseDataFromWa(
-        expenseWaDetails,
-        nlpHandler
-      );
-      if (isLeft(expenseDetails)) {
-        if (expenseDetails.left === "userDoesNotExist") {
+    saveWaExpense: async (msgData) => {
+      try {
+        const waNumber = msgData.data.message._data.from.substring(0, 12);
+        const userText = msgData.data.message._data.body;
+        const user = await getUserDetails({ waNumber });
+        if (_.isNil(user)) {
+          expenseSaveFailed({ reason: "userDoesNotExist", waNumber });
           const messageText = renderTemplate("UserDoesNotExistTemplate", {});
-          await whatsAppHandler.sendTextMessage(
-            expenseWaDetails.data.message._data.from.substring(0, 12),
-            messageText
-          );
-        } else if (expenseDetails.left === "invalidUserMessage") {
+          await whatsAppHandler.sendTextMessage(waNumber, messageText);
+          return right("User does not exist");
+        }
+
+        const extractedData: NlpOutput =
+          await nlpHandler.extractExpenseDataFromFreeText(userText);
+        if (
+          !extractedData.expenses[0].amount ||
+          !extractedData.expenses[0].category
+        ) {
           const messageText = renderTemplate("UserMessageNotValidTemplate", {});
           await whatsAppHandler.sendTextMessage(
-            expenseWaDetails.data.message._data.from.substring(0, 12),
+            msgData.data.message._data.from.substring(0, 12),
             messageText
           );
+          return right("User message is not valid");
         }
-        return right(expenseDetails.left);
+        extractedExpenseFromGpt({
+          text: userText,
+          data: extractedData,
+        });
+        for (let value of extractedData.expenses) {
+          const category = await repo.getCategoryDetails({
+            name: value.category,
+          });
+          const expenseData: Expense = {
+            userId: user.id,
+            amount: value.amount,
+            textMessage: value.text,
+            categoryId: category.id,
+          };
+          await repo.saveExpense(expenseData);
+          expenseSaved(expenseData);
+          const messageText = renderTemplate("ExpenseSavedTemplate", {
+            data: {
+              amount: expenseData.amount,
+              category: value.category,
+            },
+          });
+          await whatsAppHandler.sendTextMessage(waNumber, messageText);
+        }
+        return right("Expense(s) saved Successfully");
+      } catch (e) {
+        console.log(e);
       }
-      const result = await repo.saveExpense(
-        _.omit(["categoryName"], expenseDetails.right)
-      );
-      const messageText = renderTemplate("ExpenseSavedTemplate", {
-        data: {
-          amount: expenseDetails.right.amount,
-          category: expenseDetails.right.categoryName,
-        },
-      });
-      await whatsAppHandler.sendTextMessage(
-        expenseWaDetails.data.message._data.from.substring(0, 12),
-        messageText
-      );
-      expenseSaved(result);
-      return right(result);
     },
 
     getUserExpenseList: async (userId, limit, page, categoryId, from, to) => {

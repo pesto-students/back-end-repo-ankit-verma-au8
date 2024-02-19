@@ -286,7 +286,7 @@ describe("Save WA expense API", () => {
       payload: msgData,
     });
     expect(response.statusCode).to.eql(200);
-    expect(response.result).to.eql("userDoesNotExist");
+    expect(response.result).to.eql("User does not exist");
   });
 });
 
