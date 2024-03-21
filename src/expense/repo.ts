@@ -136,7 +136,7 @@ export const getUserExpenseCount = async (userId, categoryId, from, to) => {
   `;
 
   return await db.raw(query, { userId, categoryId, from, to }).then((r) => {
-    return r.rows[0].totalCount;
+    return r.rows[0];
   });
 };
 
