@@ -21,6 +21,7 @@ import BudgetRouter from "./budget/router";
 import { WhatsAppHandlerObj } from "./whatsapp/types";
 import { nlpHandlerObj } from "./nlp/types";
 import { logger } from "./logger";
+var cron = require("node-cron");
 
 export const init = async (
   config,
@@ -97,8 +98,14 @@ export const init = async (
     whatsAppHandlerObj,
     nlpHandlerObj
   );
-  const budgetHandlerObj = budgetHandler();
-
+  const budgetHandlerObj = budgetHandler(whatsAppHandlerObj);
+  //Cron jobs
+  if (config.BUDGET_REMINDERS != "false") {
+    cron.schedule("* * * * *", () => {
+      console.log("Sending budget reminders...");
+      budgetHandlerObj.sendBudgetReminder();
+    });
+  }
   // Authentications
   server.auth.strategy("jwt", "jwt", {
     key: config.JWT_SECRET,

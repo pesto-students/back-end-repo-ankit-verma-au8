@@ -5,6 +5,9 @@ import { Budget } from "./types";
 import db from "../db";
 import * as _ from "ramda";
 import { getTotalExpenseForCategory } from "../../src/expense/repo";
+import { renderTemplate } from "../../src/whatsapp/domain";
+import { getUserDetails } from "../../src/user/repo";
+import { WhatsAppHandlerObj } from "../../src/whatsapp/types";
 
 function getMonthStartAndEndDates() {
   const currentDate = new Date();
@@ -20,12 +23,7 @@ function getMonthStartAndEndDates() {
   };
 }
 
-// Example usage
-const { startDate, endDate } = getMonthStartAndEndDates();
-console.log("Start Date:", startDate);
-console.log("End Date:", endDate);
-
-export default function expenseHandler() {
+export default function expenseHandler(whatsAppHandler: WhatsAppHandlerObj) {
   return {
     saveBudget: async (budgetDetails: Budget) => {
       const budget = await repo.getBudgetDetails({
@@ -75,6 +73,54 @@ export default function expenseHandler() {
         budget.totalExpense = data[0]?.totalExpense;
       }
       return right(budgets);
+    },
+    /** Need improvement */
+    sendBudgetReminder: async () => {
+      const budgets = await repo.getBudgetsList({});
+      const { startDate, endDate } = getMonthStartAndEndDates();
+      for (let budget of budgets) {
+        const data = await getTotalExpenseForCategory(
+          budget.userId,
+          budget.categoryId,
+          startDate,
+          endDate
+        );
+        if (data.length == 0) {
+          console.log("No budgets are alarming currently...");
+          return;
+        }
+        const expensePercent = data[0]?.totalExpense / budget.amount;
+        const userDetails = await getUserDetails({ id: budget.userId });
+
+        if (expensePercent > 0.5 && expensePercent < 0.9) {
+          const messageText = renderTemplate("BudgetReminderTemplateYellow", {
+            expensePercent: expensePercent,
+            categoryName: data[0].categoryName,
+          });
+          await whatsAppHandler.sendTextMessage(
+            userDetails.waNumber,
+            messageText
+          );
+        } else if (expensePercent >= 0.9 && expensePercent <= 1) {
+          const messageText = renderTemplate("BudgetReminderTemplateRed", {
+            expensePercent: expensePercent,
+            categoryName: data[0].categoryName,
+          });
+          await whatsAppHandler.sendTextMessage(
+            userDetails.waNumber,
+            messageText
+          );
+        } else {
+          const messageText = renderTemplate("BudgetExceededReminder", {
+            expensePercent: expensePercent,
+            categoryName: data[0].categoryName,
+          });
+          await whatsAppHandler.sendTextMessage(
+            userDetails.waNumber,
+            messageText
+          );
+        }
+      }
     },
   };
 }

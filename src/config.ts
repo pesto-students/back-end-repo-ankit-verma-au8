@@ -42,6 +42,7 @@ const Config = {
   WAPI_INSTANCE_ID: process.env.WAPI_INSTANCE_ID || "",
   WAPI_API_KEY: process.env.WAPI_API_KEY,
   GPT_API_KEY: process.env.GPT_API_KEY,
+  BUDGET_REMINDERS: process.env.BUDGET_REMINDERS,
 };
 
 const Prod = _.merge(Config, {

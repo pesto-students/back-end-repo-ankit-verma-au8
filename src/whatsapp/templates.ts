@@ -4,7 +4,10 @@ import nunjucks from "nunjucks";
 export type TemplateName =
   | "UserDoesNotExistTemplate"
   | "UserMessageNotValidTemplate"
-  | "ExpenseSavedTemplate";
+  | "ExpenseSavedTemplate"
+  | "BudgetReminderTemplateYellow"
+  | "BudgetReminderTemplateRed"
+  | "BudgetExceededReminder";
 
 export const UserDoesNotExistTemplate = `Hello,
 Sorry! It seems your account does not exist. Please visit https://trackpe.com to create an account.
@@ -20,8 +23,15 @@ export const ExpenseSavedTemplate = `Your expense has been saved:
 Amount: {{data.amount}}
 Category:{{data.category}}`;
 
+export const BudgetReminderTemplateYellow = `You are approaching your {{categoryName}} budget limit. You are currently at {{expensePercent}} percent. Visit the dashboard for more details.`;
+export const BudgetReminderTemplateRed = `You are very close to your {{categoryName}} budget limit. You are currently at {{expensePercent}} percent. Visit the dashboard for more details.`;
+export const BudgetExceededReminder = `You have exceeded your {{categoryName}} budget limit. You are currently at {{expensePercent}} percent. Visit the dashboard for more details.`;
+
 export const AllTemplates = {
   UserDoesNotExistTemplate,
   UserMessageNotValidTemplate,
   ExpenseSavedTemplate,
+  BudgetReminderTemplateYellow,
+  BudgetReminderTemplateRed,
+  BudgetExceededReminder,
 };

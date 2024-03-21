@@ -144,7 +144,12 @@ export const getExpenseCategory = async (q) => {
   return await db("expenseCategories").select("*").where(q);
 };
 
-export async function getTotalExpenseForCategory(userId, categoryId, from, to) {
+export async function getTotalExpenseForCategory(
+  userId,
+  categoryId,
+  from,
+  to
+): Promise<Array<{ categoryName: string; totalExpense: number }>> {
   const query = `
     SELECT
       "expenseCategories"."name" AS "categoryName",
