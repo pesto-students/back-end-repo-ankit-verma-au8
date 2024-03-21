@@ -87,7 +87,7 @@ export default function expenseHandler(
     },
 
     getUserExpenseList: async (userId, limit, page, categoryId, from, to) => {
-      return await repo.getUserExpenseList(
+      const result = await repo.getUserExpenseList(
         userId,
         limit,
         page - 1,
@@ -95,6 +95,13 @@ export default function expenseHandler(
         from,
         to
       );
+      const { totalCount } = await repo.getUserExpenseCount(
+        userId,
+        categoryId,
+        from,
+        to
+      );
+      return { data: result, totalCount };
     },
 
     getTotalExpense: async (month = null, year = null) => {
