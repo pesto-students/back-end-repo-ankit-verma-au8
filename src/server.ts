@@ -91,7 +91,7 @@ export const init = async (
       },
     },
   ]);
-  const userHandlerObj = userHandler(config);
+  const userHandlerObj = userHandler(config, whatsAppHandlerObj);
   const authHandlerObj = authHandler(config);
   const expenseHandlerObj = expenseHandler(
     config,

@@ -7,7 +7,8 @@ export type TemplateName =
   | "ExpenseSavedTemplate"
   | "BudgetReminderTemplateYellow"
   | "BudgetReminderTemplateRed"
-  | "BudgetExceededReminder";
+  | "BudgetExceededReminder"
+  | "WelcomeTemplate";
 
 export const UserDoesNotExistTemplate = `Hello,
 Sorry! It seems your account does not exist. Please visit https://trackpe.com to create an account.
@@ -26,6 +27,25 @@ Category:{{data.category}}`;
 export const BudgetReminderTemplateYellow = `You are approaching your {{categoryName}} budget limit. You are currently at {{expensePercent}} percent. Visit the dashboard for more details.`;
 export const BudgetReminderTemplateRed = `You are very close to your {{categoryName}} budget limit. You are currently at {{expensePercent}} percent. Visit the dashboard for more details.`;
 export const BudgetExceededReminder = `You have exceeded your {{categoryName}} budget limit. You are currently at {{expensePercent}} percent. Visit the dashboard for more details.`;
+export const WelcomeTemplate = `🎉 *Welcome to WhatSpend!* 🎉
+
+We're thrilled to have you onboard! Managing your expenses just got easier with our WhatSpend.
+
+To track your expenses seamlessly, simply send a message like this:
+
+"Spend [amount] on [category]"
+
+For example: "Spend 1000 on groceries"
+
+We'll take care of the rest and update your dashboard accordingly.
+
+📌 *Save our WhatsApp number*: Save this WhatsApp number for easy access.
+
+Pin this message to the top of your chat list so you can easily access it whenever you need to log an expense.
+
+If you have any questions or need assistance, feel free to reach out anytime.
+
+Happy tracking! 📊`;
 
 export const AllTemplates = {
   UserDoesNotExistTemplate,
@@ -34,4 +54,5 @@ export const AllTemplates = {
   BudgetReminderTemplateYellow,
   BudgetReminderTemplateRed,
   BudgetExceededReminder,
+  WelcomeTemplate,
 };

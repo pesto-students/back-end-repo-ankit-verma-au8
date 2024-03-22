@@ -3,8 +3,13 @@ import { userAccountCreated, userAccountCreationFailed } from "../logEvents";
 import * as repo from "./repo";
 import { SaveUserError, User, UserId } from "./types";
 import jwt from "jsonwebtoken";
+import { WhatsAppHandlerObj } from "../whatsapp/types";
+import { renderTemplate } from "../whatsapp/domain";
 
-export default function userHandler(config) {
+export default function userHandler(
+  config,
+  whatsAppHandler: WhatsAppHandlerObj
+) {
   return {
     signUpUser: async (
       signUpDetails: User
@@ -25,6 +30,11 @@ export default function userHandler(config) {
         id: userId,
         waNumber: signUpDetails.waNumber,
       });
+      const messageText = renderTemplate("WelcomeTemplate", {});
+      await whatsAppHandler.sendTextMessage(
+        signUpDetails.waNumber,
+        messageText
+      );
       return right(userId);
     },
   };
