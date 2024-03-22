@@ -13,6 +13,15 @@ export enum allCategories {
   pets = "Pets",
   travel = "Travel",
 }
+
+export type TrendsInterval = "daily" | "weekly" | "monthly";
+
+export enum trendsInterval {
+  daily = "daily",
+  weekly = "weekly",
+  monthly = "monthly",
+}
+
 export const saveExpenseSchema = Joi.object({
   amount: Joi.number().required(),
   categoryId: Joi.number().required(),
@@ -69,8 +78,7 @@ export const getUserExpensesListSchema = Joi.object({
 });
 
 export const getUserExpensesTrendsSchema = Joi.object({
-  limit: Joi.number().positive().greater(0).required(),
-  page: Joi.number().positive().greater(0).required(),
+  interval: Joi.string().valid("daily", "weekly", "monthly").required(),
 });
 
 export const getTotalExpenseSchema = Joi.object({

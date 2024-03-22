@@ -10,6 +10,7 @@ import {
   ExpenseSaveResponse,
   ExtractExpenseDataFromWaError,
   NlpOutput,
+  TrendsInterval,
 } from "./types";
 import { WhatsAppHandlerObj } from "../../src/whatsapp/types";
 import { renderTemplate } from "../../src/whatsapp/domain";
@@ -18,6 +19,7 @@ import { getRandomValueFromArray } from "../../test/env/factories";
 import db from "../db";
 import * as _ from "ramda";
 import { getUserDetails } from "../../src/user/repo";
+import { generateDates } from "./domain";
 
 export default function expenseHandler(
   config,
@@ -126,9 +128,18 @@ export default function expenseHandler(
       return { totalExpense };
     },
 
-    getExpenseTrend: async (limit, page) => {
-      const expenseTrend = await repo.getExpenseTrends(limit, page);
-      return expenseTrend;
+    getExpenseTrend: async (userId, interval: TrendsInterval) => {
+      const dates = generateDates(interval);
+      const result: any = [];
+      for (let value of dates) {
+        const data = await repo.getCategoryExpenses(
+          value.startDate,
+          value.endDate,
+          userId
+        );
+        result.push({ ...value, data });
+      }
+      return result;
     },
 
     getCategoryPercentage: async (month, year) => {

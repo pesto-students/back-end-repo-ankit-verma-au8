@@ -80,8 +80,10 @@ const expenseRouter = (server: Hapi.Server, expenseHandler) => {
     path: GET_EXPENSE_OVERVIEW.endPoint,
     options: {
       handler: async (request, h) => {
-        const { limit, page } = request.query;
-        const response = await expenseHandler.getExpenseTrend(limit, page);
+        const response = await expenseHandler.getExpenseTrend(
+          request.auth.credentials.userId,
+          request.query.interval
+        );
         return h.response(response).code(200);
       },
       auth: GET_EXPENSE_OVERVIEW.auth,

@@ -26,45 +26,6 @@ export const getTotalExpenseForMonth = async (month, year) => {
   });
 };
 
-export const getExpenseTrends = async (limit, page) => {
-  const query = `
-  WITH RECURSIVE date_series AS (
-    SELECT generate_series(
-             CURRENT_DATE - INTERVAL '30 days',
-             CURRENT_DATE,
-             INTERVAL '1 day'
-           )::DATE AS date
-  )
-  SELECT
-    to_char(ds.date, 'YYYY-MM-DD') AS identifier,
-    COALESCE(json_agg(e.expense), '[]'::json) AS expenses
-  FROM
-    date_series ds
-  LEFT JOIN (
-    SELECT
-      e."createdAt"::DATE AS date,
-      jsonb_build_object('category', ec."name", 'totalExepense', SUM(e."amount")) AS expense
-    FROM
-      "expenses" e
-      JOIN "expenseCategories" ec ON e."categoryId" = ec."id"
-    WHERE
-      e."createdAt"::DATE >= CURRENT_DATE - INTERVAL '8 days'
-      AND e."createdAt"::DATE <= CURRENT_DATE
-    GROUP BY
-      e."createdAt"::DATE,
-      ec."name"
-  ) e ON ds.date = e.date
-  GROUP BY
-    ds.date
-  ORDER BY
-    ds.date DESC
-  LIMIT :limit  OFFSET :page;
-  `;
-  return await db.raw(query, { limit, page: (page - 1) * limit }).then((r) => {
-    return r.rows;
-  });
-};
-
 export const getCategoryPercentage = async (month, year) => {
   const query = `
   SELECT
@@ -170,3 +131,16 @@ export async function getTotalExpenseForCategory(
     return r.rows;
   });
 }
+
+export const getCategoryExpenses = async (startDate, endDate, userId) => {
+  const query = `
+    SELECT ec.name AS "categoryName", COALESCE(SUM(e.amount), 0) AS "totalExpense"
+    FROM "expenses" e
+    RIGHT JOIN "expenseCategories" ec ON e."categoryId" = ec.id
+    WHERE e."createdAt"::date >= :endDate and e."createdAt"::date <= :startDate AND e."userId" = :userId
+    GROUP BY ec.name;
+  `;
+  return await db.raw(query, { startDate, endDate, userId }).then((r) => {
+    return r.rows;
+  });
+};
