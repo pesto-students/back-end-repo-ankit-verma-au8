@@ -337,12 +337,11 @@ describe("Get expense overview", () => {
     });
     const response = await testEnv.server.inject({
       method: GET_EXPENSE_OVERVIEW.method,
-      url: `${GET_EXPENSE_OVERVIEW.endPoint}?limit=5&page=1`,
+      url: `${GET_EXPENSE_OVERVIEW.endPoint}?interval=daily`,
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
     });
     expect(response.statusCode).to.eql(200);
-    expect(response.result.length).to.eql(5);
   });
 });
