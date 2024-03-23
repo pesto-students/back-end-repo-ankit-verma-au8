@@ -1,8 +1,10 @@
-# WhatSpend Core
+![LOGO](https://github.com/pesto-students/front-end-repo-ankit-verma-au8/raw/master/src/assets/app-logo.png)
 
-Backend repository for TrackPe
+> WhatSpend is a WhatsApp and ChatGPT powered expense tracking app that uses AI to automatically categorize spending, providing users with valuable insights and budget control. Send a simple message and get your spending categorized and tracked.
 
-## INSTALATION
+
+
+## INSTALLATION
 
 ### Install Nodejs
 
