@@ -43,3 +43,19 @@ export function generateDates(interval: TrendsInterval): DateRange[] {
   }
   return dates;
 }
+
+interface Transaction {
+  id: number;
+  amount: string;
+  textMessage: string;
+  categoryName: string;
+  createdAt: string;
+}
+
+export function calculateTotalAmount(transactions: Transaction[]): number {
+  let totalAmount: number = 0;
+  transactions.forEach((transaction) => {
+    totalAmount += parseInt(transaction.amount);
+  });
+  return totalAmount;
+}

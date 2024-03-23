@@ -19,7 +19,7 @@ import { getRandomValueFromArray } from "../../test/env/factories";
 import db from "../db";
 import * as _ from "ramda";
 import { getUserDetails } from "../../src/user/repo";
-import { generateDates } from "./domain";
+import { calculateTotalAmount, generateDates } from "./domain";
 
 export default function expenseHandler(
   config,
@@ -103,7 +103,8 @@ export default function expenseHandler(
         from,
         to
       );
-      return { data: result, totalCount };
+      const totalExpense = await calculateTotalAmount(result);
+      return { data: result, totalCount, totalExpense };
     },
 
     getTotalExpense: async (month = null, year = null) => {

@@ -101,6 +101,25 @@ export const getUserExpenseCount = async (userId, categoryId, from, to) => {
   });
 };
 
+export const getUserExpenseSum = async (userId, categoryId, from, to) => {
+  const query = `
+  SELECT
+    SUM("amount") AS "totalExpense"
+  FROM
+    "expenses"
+    JOIN "users" ON "expenses"."userId" = "users"."id"
+    JOIN "expenseCategories" ON "expenses"."categoryId" = "expenseCategories"."id"
+  WHERE
+    "users"."id" = :userId ${categoryId ? 'AND "categoryId"=:categoryId' : ""}${
+    from ? ' AND expenses."createdAt"::date >= :from' : ""
+  } ${to ? ' AND expenses."createdAt"::date <= :to' : ""};
+  `;
+
+  return await db.raw(query, { userId, categoryId, from, to }).then((r) => {
+    return r.rows[0];
+  });
+};
+
 export const getExpenseCategory = async (q) => {
   return await db("expenseCategories").select("*").where(q);
 };
