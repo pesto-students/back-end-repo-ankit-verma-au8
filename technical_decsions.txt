@@ -1,0 +1,2 @@
+--> Highlight the messages where chatgpt is not able to parse the messages. 
+So that we can learn about the user behaviors.
