@@ -107,11 +107,12 @@ export default function expenseHandler(
       return { data: result, totalCount, totalExpense };
     },
 
-    getTotalExpense: async (month = null, year = null) => {
+    getTotalExpense: async (userId, month = null, year = null) => {
       const currentDate = new Date();
       const currentMonth = currentDate.getMonth() + 1;
       const currentYear = currentDate.getFullYear();
       const totalExpense = await repo.getTotalExpenseForMonth(
+        userId,
         month ? month : currentMonth,
         year ? year : currentYear
       );

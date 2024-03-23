@@ -7,7 +7,7 @@ export const getCategoryDetails = async (q) => {
   return await db("expenseCategories").select("*").where(q).first();
 };
 
-export const getTotalExpenseForMonth = async (month, year) => {
+export const getTotalExpenseForMonth = async (userId, month, year) => {
   const query = `
   SELECT 
     EXTRACT(MONTH FROM "createdAt") AS month,
@@ -18,10 +18,11 @@ export const getTotalExpenseForMonth = async (month, year) => {
   WHERE 
       EXTRACT(MONTH FROM "createdAt") = :month
       AND EXTRACT(YEAR FROM "createdAt") = :year
+      AND "expenses"."userId" = :userId
   GROUP BY 
     year, month;
       `;
-  return await db.raw(query, { month, year }).then((r) => {
+  return await db.raw(query, { userId, month, year }).then((r) => {
     return r.rows;
   });
 };

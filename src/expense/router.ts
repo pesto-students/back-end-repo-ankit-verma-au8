@@ -142,7 +142,11 @@ const expenseRouter = (server: Hapi.Server, expenseHandler) => {
     options: {
       handler: async (request, h) => {
         const { month, year } = request.query;
-        const response = await expenseHandler.getTotalExpense(month, year);
+        const response = await expenseHandler.getTotalExpense(
+          request.auth.credentials.userId,
+          month,
+          year
+        );
         return h.response(response).code(200);
       },
       auth: GET_TOTAL_EXPENSE.auth,
