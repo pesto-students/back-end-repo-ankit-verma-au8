@@ -1,4 +1,4 @@
-# TrackPe Core
+# WhatSpend Core
 
 Backend repository for TrackPe
 
