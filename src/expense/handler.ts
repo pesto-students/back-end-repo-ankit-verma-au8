@@ -144,11 +144,12 @@ export default function expenseHandler(
       return result;
     },
 
-    getCategoryPercentage: async (month, year) => {
+    getCategoryPercentage: async (userId, month, year) => {
       const currentDate = new Date();
       const currentMonth = currentDate.getMonth() + 1;
       const currentYear = currentDate.getFullYear();
       const categoryPercentage = await repo.getCategoryPercentage(
+        userId,
         month ? month : currentMonth,
         year ? year : currentYear
       );

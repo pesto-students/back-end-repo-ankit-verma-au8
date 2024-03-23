@@ -112,6 +112,7 @@ const expenseRouter = (server: Hapi.Server, expenseHandler) => {
       handler: async (request, h) => {
         const { month, year } = request.query;
         const response = await expenseHandler.getCategoryPercentage(
+          request.auth.credentials.userId,
           month,
           year
         );

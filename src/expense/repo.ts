@@ -27,7 +27,7 @@ export const getTotalExpenseForMonth = async (userId, month, year) => {
   });
 };
 
-export const getCategoryPercentage = async (month, year) => {
+export const getCategoryPercentage = async (userId, month, year) => {
   const query = `
   SELECT
   "categoryId",
@@ -37,11 +37,11 @@ export const getCategoryPercentage = async (month, year) => {
     "expenses"
     JOIN "expenseCategories" ON "expenses"."categoryId" = "expenseCategories"."id"
   WHERE
-    EXTRACT(MONTH FROM "createdAt") = :month AND EXTRACT(YEAR FROM "createdAt") = :year
+    EXTRACT(MONTH FROM "createdAt") = :month AND EXTRACT(YEAR FROM "createdAt") = :year AND "expenses"."userId" = :userId
   GROUP BY
     "categoryId", "categoryName";
   `;
-  return await db.raw(query, { month, year }).then((r) => {
+  return await db.raw(query, { month, year, userId }).then((r) => {
     return r.rows;
   });
 };
