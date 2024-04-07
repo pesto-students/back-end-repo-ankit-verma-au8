@@ -25,12 +25,15 @@ export enum trendsInterval {
 export const saveExpenseSchema = Joi.object({
   amount: Joi.number().required(),
   categoryId: Joi.number().required(),
+  expenseDate: Joi.string().allow("").allow(null),
   textMessage: Joi.string().allow("").allow(null),
+  remarks: Joi.string().allow("").allow(null),
 });
 
 export type Expense = {
   userId: Number;
   amount: Number;
+  remarks?: string;
   textMessage: String;
   categoryId: number;
   categoryName?: string;
