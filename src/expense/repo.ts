@@ -132,19 +132,20 @@ export async function getTotalExpenseForCategory(
   to
 ): Promise<Array<{ categoryName: string; totalExpense: number }>> {
   const query = `
-    SELECT
-      "expenseCategories"."name" AS "categoryName",
-      SUM("amount") AS "totalExpense"
-    FROM
-      "expenses"
-      JOIN "users" ON "expenses"."userId" = "users"."id"
-      JOIN "expenseCategories" ON "expenses"."categoryId" = "expenseCategories"."id"
-    WHERE
-      "users"."id" = :userId
-      AND "categoryId" = :categoryId
-      AND "expenses"."createdAt"::date BETWEEN :from AND :to
-    GROUP BY
-      "expenseCategories"."name";
+  SELECT
+  "expenseCategories"."name" AS "categoryName",
+  COALESCE(SUM("expenses"."amount"), 0) AS "totalExpense"
+  FROM
+    "expenseCategories"
+  LEFT JOIN "expenses" ON "expenses"."categoryId" = "expenseCategories"."id"
+                      AND "expenses"."userId" = :userId
+                      AND "expenses"."createdAt"::date BETWEEN :from AND :to
+                      AND "expenses"."categoryId" = :categoryId
+  LEFT JOIN "users" ON "expenses"."userId" = "users"."id"
+  WHERE
+    "expenseCategories"."id" = :categoryId
+  GROUP BY
+    "expenseCategories"."name";
   `;
 
   return await db.raw(query, { userId, categoryId, from, to }).then((r) => {
