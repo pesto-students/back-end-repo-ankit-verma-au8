@@ -33,6 +33,20 @@ export const UPDATE_BUDGET = {
   notes: "Update budget api",
 };
 
+export const DELETE_BUDGET = {
+  endPoint: "/user/budget/{id}",
+  method: "DELETE",
+  auth: {
+    scope: ["user"],
+  },
+  tags: ["delete-budget", "api", "budget"],
+  failAction: "log",
+  reCaptcha: false,
+  paramSchema: updateBudgetParamSchema,
+  description: "Delete budget api",
+  notes: "Delete budget api",
+};
+
 export const GET_BUDGET = {
   endPoint: "/user/budget",
   method: "GET",

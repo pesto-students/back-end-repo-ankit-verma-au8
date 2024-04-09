@@ -1,7 +1,12 @@
 import * as Hapi from "@hapi/hapi";
 import { isLeft, fold } from "fp-ts/lib/Either";
 import * as _ from "ramda";
-import { SAVE_BUDGET, UPDATE_BUDGET, GET_BUDGET } from "./constant";
+import {
+  SAVE_BUDGET,
+  UPDATE_BUDGET,
+  GET_BUDGET,
+  DELETE_BUDGET,
+} from "./constant";
 
 const budgetRouter = (server: Hapi.Server, budgetHandler) => {
   server.route({
@@ -73,6 +78,37 @@ const budgetRouter = (server: Hapi.Server, budgetHandler) => {
       },
       description: UPDATE_BUDGET.description,
       notes: UPDATE_BUDGET.notes,
+    },
+  });
+
+  server.route({
+    method: DELETE_BUDGET.method,
+    path: DELETE_BUDGET.endPoint,
+    options: {
+      handler: async (request, h) => {
+        const budgetDetails = request.payload;
+        const response = await budgetHandler.deleteBudget(request.params.id);
+        if (isLeft(response)) {
+          return h.response({ message: response.left }).code(400);
+        }
+        return h.response(response.right).code(200);
+      },
+      auth: DELETE_BUDGET.auth,
+      tags: DELETE_BUDGET.tags,
+      validate: {
+        params: DELETE_BUDGET.paramSchema,
+        options: {
+          abortEarly: true,
+        },
+        failAction: async (request, h, err) => {
+          throw err;
+        },
+      },
+      plugins: {
+        reCaptcha: DELETE_BUDGET.reCaptcha,
+      },
+      description: DELETE_BUDGET.description,
+      notes: DELETE_BUDGET.notes,
     },
   });
 
