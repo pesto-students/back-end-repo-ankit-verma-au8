@@ -12,6 +12,10 @@ export const getBudgetDetails = async (q) => {
   return await db("budgets").select("*").where(q).first();
 };
 
+export const deleteBudget = async (q) => {
+  return await db("budgets").delete().where(q);
+};
+
 export const getBudgetsList = async (q) => {
   return await db("budgets").select("*").where(q);
 };

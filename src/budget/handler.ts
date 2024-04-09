@@ -1,5 +1,10 @@
 import { Either, isLeft, right, left } from "fp-ts/lib/Either";
-import { budgetSaved, budgetUpdated, saveBudgetFailed } from "../logEvents";
+import {
+  budgetDeleted,
+  budgetSaved,
+  budgetUpdated,
+  saveBudgetFailed,
+} from "../logEvents";
 import * as repo from "./repo";
 import { Budget } from "./types";
 import db from "../db";
@@ -54,6 +59,18 @@ export default function expenseHandler(whatsAppHandler: WhatsAppHandlerObj) {
         { id: budget.id }
       );
       budgetUpdated(result);
+      return right(result);
+    },
+
+    deleteBudget: async (id) => {
+      const budget = await repo.getBudgetDetails({
+        id,
+      });
+      if (_.isNil(budget)) {
+        return left("Budget doesn't exists for this category");
+      }
+      const result = await repo.deleteBudget({ id: budget.id });
+      budgetDeleted(result);
       return right(result);
     },
 

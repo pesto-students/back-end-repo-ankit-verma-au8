@@ -16,7 +16,8 @@ export type ExpenseEvents = "expense-saved" | "save-expense-failed";
 export type BudgetEvents =
   | "budget-saved"
   | "budget-updated"
-  | "save-budget-failed";
+  | "save-budget-failed"
+  | "budget-deleted";
 
 export type GptEvents = "gpt-expense-extracted";
 
@@ -117,6 +118,10 @@ export function budgetSaved(data) {
 
 export function budgetUpdated(data) {
   logEvent("budget-updated", data);
+}
+
+export function budgetDeleted(data) {
+  logEvent("budget-deleted", data);
 }
 
 export function saveBudgetFailed(data) {
